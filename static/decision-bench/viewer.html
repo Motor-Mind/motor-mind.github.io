@@ -14,7 +14,7 @@ body{background:#fff}header{border:0}.nav{padding:0 0 12px;justify-content:flex-
 </style>
 </head>
 <body>
-<header><div class="nav"><button id="language" aria-label="Switch language">中文</button></div></header>
+
 <main class="wrap">
 <div class="intro"><p id="subtitle" hidden></p><div class="stats" id="stats" hidden></div></div>
 <section class="panel" aria-label="Decision Diagnostic examples">
@@ -23,7 +23,7 @@ body{background:#fff}header{border:0}.nav{padding:0 0 12px;justify-content:flex-
 <div id="content">
 <div class="toolbar"><div><span class="badge" id="badge"></span></div><span class="counter" id="counter" aria-live="polite"></span></div>
 <div class="task"><div class="eyebrow" id="subgoal-label"></div><h2 id="subgoal"></h2><p class="criterion"><strong id="criterion-label"></strong> <span id="criterion"></span></p></div>
-<div class="observations"><div class="section-head"><label id="observation-label"></label><button id="quality" hidden></button></div><div class="grid" id="images"></div><p class="criterion" id="image-hint" style="margin-top:12px"></p></div>
+<div class="observations"><div class="section-head"><label id="observation-label"></label></div><div class="grid" id="images"></div><p class="criterion" id="image-hint" style="margin-top:12px"></p></div>
 <section class="prompt-section" aria-labelledby="prompt-heading"><div class="prompt-card"><h3 id="prompt-heading">Decision Task</h3><div class="decision-columns"><div class="decision-question"><p class="question" id="question"></p><p class="prompt-copy" id="prompt-observation"></p><p class="prompt-copy" id="prompt-rule"></p><p class="prompt-copy" id="prompt-coordinates"></p></div><div class="prompt-output"><label id="output-label"></label><pre id="output-format"></pre><p class="prompt-copy" id="output-note"></p></div></div></div></section>
 <div class="answerbar"><div><label id="answer-label"></label><div class="answer" id="answer" aria-live="polite"></div></div><button class="primary" id="reveal"></button></div>
 
@@ -46,7 +46,7 @@ const title=t=>zh?zhTitles[t]:titles[t];
 const current=()=>filtered[position];
 function option(value,text){return new Option(text,value)}
 function language(){
- document.documentElement.lang=zh?'zh-CN':'en';$('language').textContent=zh?'English':'中文';
+ document.documentElement.lang='en';
  $('subtitle').textContent=tr('Observe the scene. Understand the goal. Make the next decision.','观察场景，理解目标，做出下一步决策。');
  $('stats').replaceChildren(...['action','progress','completion'].map(t=>{const s=document.createElement('span'),b=document.createElement('b');b.textContent=DATA.items.filter(x=>x.task_type===t).length;s.append(b,' '+title(t));return s}));
  const selected=$('type').value||'action';$('type').replaceChildren(...Object.keys(titles).map(t=>option(t,title(t))));$('type').value=selected;
@@ -75,9 +75,8 @@ function render(){
  const qs={action:tr('What is the primary next action after t1 that advances the subgoal?','在 t1 之后，推进子目标的首要下一步动作是什么？'),progress:tr('Does the change from t0 to t1 advance the stated subgoal?','从 t0 到 t1 的变化是否推进了给定子目标？'),completion:tr('Are the subgoal and its success criterion satisfied at t1?','t1 时是否已满足子目标及其成功条件？')};$('question').textContent=qs[x.task_type];
  renderPrompt(x);
  $('images').classList.toggle('two',x.images.length===2);
- const hasHD=x.hd_images?.some(Boolean);$('quality').hidden=!hasHD;
- $('quality').textContent=useHD?tr('View original images','查看原始图片'):tr('View HD previews','查看高清预览');
- $('image-hint').textContent=useHD&&hasHD?tr('HD preview · Click to enlarge. Original benchmark images remain available.','高清预览 · 点击放大，可切换查看原始题图。'):tr('Original benchmark images · Click to enlarge.','原始题图 · 点击放大。');
+ const hasHD=x.hd_images?.some(Boolean);
+ $('image-hint').textContent=useHD&&hasHD?tr('HD preview · Click to enlarge.','高清预览 · 点击放大，可切换查看原始题图。'):tr('Original benchmark images · Click to enlarge.','原始题图 · 点击放大。');
  $('images').replaceChildren(...x.images.map((path,i)=>{
   const hd=useHD&&x.hd_images?.[i];if(hd)path=hd;
   const legend=x.image_legends[i],fig=document.createElement('figure'),cap=document.createElement('figcaption'),time=document.createElement('span'),btn=document.createElement('button'),img=document.createElement('img');
@@ -110,8 +109,7 @@ function answer(){
  else $('answer').textContent=JSON.stringify({label:x.answer})+' · '+(x.task_type==='progress'?(x.answer===1?tr('Progress','有进展'):tr('No progress','无进展')):(x.answer===1?tr('Complete','已完成'):tr('Incomplete','未完成')));
 }
 $('type').onchange=()=>filter();$('sample').onchange=()=>filter();
-$('language').onclick=()=>{zh=!zh;language()};$('reveal').onclick=()=>{revealed=!revealed;answer()};
-$('quality').onclick=()=>{const wasRevealed=revealed;useHD=!useHD;render();revealed=wasRevealed;answer()};
+$('reveal').onclick=()=>{revealed=!revealed;answer()};
 $('prev').onclick=()=>{if(position>0){position--;render()}};$('next').onclick=()=>{if(position<filtered.length-1){position++;render()}};
 $('random').onclick=()=>{if(filtered.length>1){position=(position+1+Math.floor(Math.random()*(filtered.length-1)))%filtered.length;render()}};
 $('close-zoom').onclick=()=>$('zoom').close();$('zoom').onclick=e=>{if(e.target===$('zoom'))$('zoom').close()};
