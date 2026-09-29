@@ -7,35 +7,38 @@
   <meta name="theme-color" content="#167ba6">
   <title>MotorMind: Scaffolding General Vision Language Models for Zero-Shot Robot Manipulation</title>
   <link rel="icon" href="./static/images/motormind/icon.png">
-  <link rel="stylesheet" href="./static/css/motormind.css?v=diagnostic-results">
-  <script src="./static/js/motormind.js?v=results-2" defer></script>
+  <script>
+    if (!location.hash && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('entrance-ready');
+    }
+  </script>
+  <link rel="stylesheet" href="./static/css/motormind.css?v=entrance-1">
+  <script src="./static/js/motormind.js?v=entrance-1" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<button class="navigation-toggle" id="navigation-toggle" aria-controls="sidebar" aria-expanded="true">← Hide navigation</button>
-<header class="mobile-header">
-  <a class="mobile-brand" href="#introduction">MotorMind</a>
-  <button id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">Menu</button>
-</header>
-<nav class="sidebar" id="sidebar" aria-label="Page sections">
-  <a class="brand" href="#introduction"><img width="922" height="777" src="./static/images/motormind/icon.png" alt=""><span>MotorMind</span></a>
-  <p class="brand-note">VLM reasoning.<br>Robot control.</p>
-  <div class="nav-links">
+<header class="topbar">
+  <a class="brand" href="#introduction"><img width="38" height="38" src="./static/images/motormind/icon.png" alt=""><span>MotorMind<span class="brand-dot">.</span></span></a>
+  <button id="menu-toggle" aria-controls="page-navigation" aria-expanded="false" aria-label="Open navigation">Menu <span aria-hidden="true">☰</span></button>
+  <nav id="page-navigation" aria-label="Page sections"><div class="nav-links">
     <a href="#introduction" class="active" aria-current="location">Overview</a>
     <a href="#abstract">TL;DR</a>
-    <a href="#diagnostic">Decision Diagnostic</a>
+    <a href="#diagnostic">Diagnostic</a>
     <a href="#method">Method</a>
-    <a href="#results">Main Experiments</a>
+    <a href="#results">Experiments</a>
     <a href="#adaptive">Adaptive Tasks</a>
-    <a href="#real-world">Real-World Deployment</a>
-  </div>
-  <a class="sidebar-source" href="https://github.com/Motor-Mind/motor-mind.github.io">Website source ↗</a>
-</nav>
+    <a href="#real-world">Real World</a>
+  </div></nav>
+  <div class="reading-progress" aria-hidden="true"></div>
+</header>
 <main id="main">
   <section class="hero section-anchor" id="introduction">
+    <div class="hero-atmosphere" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="hero-scan"></div><i class="signal signal-one"></i><i class="signal signal-two"></i><i class="signal signal-three"></i></div>
     <div class="container hero-inner">
+      <p class="hero-eyebrow"><span></span> GENERAL INTELLIGENCE. PHYSICAL ACTION.</p>
       <div class="wordmark"><img width="922" height="777" src="./static/images/motormind/icon.png" alt=""><span>MotorMind</span></div>
       <h1>Scaffolding General Vision Language Models<br class="desktop-break"> for Zero-Shot Robot Manipulation</h1>
+      <p class="hero-description">A general-purpose mind. A new way to move.</p>
       <div class="authors">
         <span><a href="https://bingxuanli.com/" target="_blank" rel="noopener noreferrer">Bingxuan Li</a><sup>*</sup></span>
         <span><a href="https://song-siqi.github.io/" target="_blank" rel="noopener noreferrer">Siqi Song</a><sup>*</sup></span>
@@ -56,6 +59,9 @@
           <span>Code</span>
         </a>
       </div>
+      <div class="hero-sequence" aria-label="Observe, reason, act"><span class="sequence-step"><i aria-hidden="true">01</i> Observe</span><span class="sequence-connector" aria-hidden="true"></span><span class="sequence-step"><i aria-hidden="true">02</i> Reason</span><span class="sequence-connector" aria-hidden="true"></span><span class="sequence-step"><i aria-hidden="true">03</i> Act</span></div>
+      <div class="hero-metrics"><a href="#results"><strong>66.7<span>%</span></strong><span>Base success</span></a><a href="#results"><strong>53.8<span>%</span></strong><span>Under perturbations</span></a><a href="#real-world"><strong>95<span>%</span></strong><span>Real-world success</span></a></div>
+      <div class="hero-bottom"><a class="explore-link" href="#abstract">Explore the research <span aria-hidden="true">↓</span></a><button class="replay-intro" id="replay-intro" type="button" hidden><span aria-hidden="true">↻</span> Replay intro</button></div>
     </div>
   </section>
 
@@ -117,6 +123,9 @@
         <figure><a href="./static/images/motormind/base-results.png" target="_blank" rel="noopener"><img width="1832" height="620" src="./static/images/motormind/base-results.png" alt="Base task success: CaP-X 13.3%, MotorMind 66.7%, fine-tuned OpenVLA-OFT 98.3%, and fine-tuned pi 0.5 98.3%." loading="eager"></a></figure>
         <figure><a href="./static/images/motormind/perturbation-results.png" target="_blank" rel="noopener"><img width="1792" height="620" src="./static/images/motormind/perturbation-results.png" alt="Perturbed task success: CaP-X 19.2%, MotorMind 53.8%, fine-tuned OpenVLA-OFT 51.2%, and fine-tuned pi 0.5 63.3%." loading="eager"></a></figure>
       </div>
+      <div id="efficiency-results"><h3 class="full-results-heading">Success rate versus episode wall time</h3>
+      <p class="section-intro">Figure 4 from the paper compares success and execution time across base and perturbed tasks, separating fine-tuned policies from zero-shot methods.</p>
+      <figure class="paper-figure"><a href="./static/images/motormind/main-results-efficiency.png" aria-label="Open Figure 4: success rate versus episode wall time" target="_blank" rel="noopener"><img src="./static/images/motormind/main-results-efficiency.png" alt="Figure 4: four panels compare success rate and episode wall time for fine-tuned policies and zero-shot methods, in base and perturbation settings." loading="lazy"></a><figcaption>Figure 4. Orange points denote MotorMind; orange horizontal lines show its success rate in the fine-tuned panels. Gray dashed curves indicate the same time-normalized success score as MotorMind. Select the figure to zoom and inspect all four panels.</figcaption></figure></div>
       <h3 class="full-results-heading" id="full-results-heading">Full Results</h3>
       <div class="table-scroll full-results-scroll" role="region" aria-labelledby="full-results-heading" tabindex="0">
       <table class="full-results">
@@ -175,5 +184,11 @@
 
   <footer><p>MotorMind · University of Illinois Urbana-Champaign</p><p>Based on the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies website template</a>, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p></footer>
 </main>
+<dialog id="figure-viewer" aria-labelledby="figure-title">
+  <div class="viewer-toolbar"><h2 id="figure-title">Figure explorer</h2><div class="viewer-actions"><button id="figure-prev" aria-label="Previous figure">←</button><button id="figure-next" aria-label="Next figure">→</button><button id="zoom-out" aria-label="Zoom out">−</button><output id="zoom-level" aria-live="polite">100%</output><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-reset">Fit</button><a id="figure-original" target="_blank" rel="noopener">Original ↗</a><button id="figure-close" aria-label="Close figure viewer">✕</button></div></div>
+  <p class="viewer-hint">Zoom to inspect details · Drag to pan · Use ← / → to browse · Esc to close</p>
+  <div class="figure-viewport"><img id="figure-image" alt="" draggable="false"></div>
+  <p id="figure-caption"></p>
+</dialog>
 </body>
 </html>
