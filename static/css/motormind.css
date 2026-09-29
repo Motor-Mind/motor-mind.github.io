@@ -211,3 +211,38 @@
 .hero .affiliation{font-size:16px;line-height:1.5}
 .hero .affiliation img{width:23px;height:23px}
 @media(max-width:700px){.hero .affiliation{font-size:13px}.hero .affiliation img{width:21px;height:21px}}
+
+/* A single desktop title line gives more viewport space to the teaser. */
+@media(min-width:1000px){
+ .hero h1{max-width:none;white-space:nowrap;font-size:clamp(18px,1.85vw,27px);letter-spacing:-.55px}
+ .hero h1 .desktop-break{display:none}
+ .hero-teaser{max-width:1000px}
+ .hero{padding-top:16px;padding-bottom:16px}
+ .hero .hero-inner{gap:9px}
+ .hero-summary{padding:8px 20px}
+}
+
+@media(min-width:1000px){
+ .hero-title-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px}
+ .hero .hero-title-row .wordmark{flex:none;font-size:30px;letter-spacing:-1.4px;gap:7px;margin:0}
+ .hero .hero-title-row .wordmark img{width:30px;height:30px}
+ .hero .hero-title-row h1{margin:0;font-size:clamp(13px,1.35vw,18px);letter-spacing:-.3px;white-space:nowrap;line-height:1.4}
+}
+
+/* Unify the title and keep the drafting texture at the page edges. */
+.hero{background:radial-gradient(ellipse at 50% 45%,#fff 30%,#f1f6fc 100%)}
+.hero:before{background-size:32px 32px,32px 32px,160px 160px,160px 160px;mask-image:linear-gradient(90deg,#0009,transparent 22%,transparent 78%,#0009);opacity:.65}
+.blueprint-frame{display:none}
+.blueprint-drafting:before,.blueprint-drafting:after{content:"";position:absolute;top:28px;bottom:28px;width:18px;border-block:1px solid #a7bdd8;opacity:.65}
+.blueprint-drafting:before{left:3%;border-left:1px solid #c4d3e6}.blueprint-drafting:after{right:3%;border-right:1px solid #c4d3e6}
+.hero-summary{background:transparent;border-color:#d7e2ee}.hero-summary:before,.hero-summary:after{display:none}
+.hero-teaser video{border:1px solid #d6e1ed;border-radius:10px;box-shadow:0 8px 24px #233c5b0d}
+@media(min-width:1000px){
+ .hero-title-row{gap:9px}
+ .hero .hero-title-row .wordmark,.hero .hero-title-row h1{font-size:clamp(17px,2vw,26px);font-weight:750;letter-spacing:-.35px;line-height:1.35}
+ .hero .hero-title-row .wordmark img{width:27px;height:27px}
+ .hero .hero-title-row .hero-name:after{content:":"}
+}
+@media(max-width:999px){.hero .hero-title-row .wordmark,.hero .hero-title-row h1{font-size:19px;line-height:1.35;letter-spacing:-.35px}.hero .hero-title-row .wordmark img{width:26px;height:26px}}
+
+@media(min-width:1000px){.hero-copy{max-width:1100px}.hero .hero-title-row h1{white-space:normal}.hero-title-row{gap:8px}}

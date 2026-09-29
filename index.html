@@ -12,11 +12,11 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=author-alignment-1">
+  <link rel="stylesheet" href="./static/css/motormind.css?v=unified-title-3">
   <script src="./static/js/motormind.js?v=hero-video-1" defer></script>
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
-  <script src="./static/js/research.js?v=replay-picker-2" defer></script>
+  <script src="./static/js/research.js?v=no-replays-1" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -30,7 +30,6 @@
     <a href="#results">Experiments</a>
     <a href="#adaptive">Adaptive Tasks</a>
     <a href="#real-world">Real Robot Deployment</a>
-    <a href="#replays">Replays</a>
     <a href="#failures">Failure Analysis</a>
   </div></nav>
   <div class="reading-progress" aria-hidden="true"></div>
@@ -46,8 +45,10 @@
     </div>
     <div class="container hero-inner">
       <div class="hero-copy">
+      <div class="hero-title-row">
       <div class="wordmark"><img width="922" height="777" src="./static/images/motormind/icon.png" alt=""><span class="hero-name">MotorMind</span></div>
       <h1>Scaffolding General Vision Language Models<br class="desktop-break"> for Zero-Shot Robot Manipulation</h1>
+      </div>
       <div class="authors">
         <span><a href="https://bingxuanli.com/" target="_blank" rel="noopener noreferrer">Bingxuan Li</a><sup>*</sup></span>
         <span><a href="https://song-siqi.github.io/" target="_blank" rel="noopener noreferrer">Siqi Song</a><sup>*</sup></span>
@@ -331,53 +332,6 @@
   </section>
 
 
-  <section class="content-section section-anchor research-import" id="replays">
-    <div class="container">
-      <p class="eyebrow">Replays</p>
-      <h2>Watch the harness think</h2>
-      <p class="lede">58 LIBERO-PRO episodes from the evaluated run, with the model's own words synced to the cameras: two successful episodes for every task that succeeded at all, two recoveries, and four failure examples. Each frame is one observation. Click any log line to jump there, or click the subgoal strip. Orange marks on the strip are the subgoals where the failure analysis found an error.</p>
-
-      <div class="picker" id="rp-picker"></div>
-      <div class="replay">
-        <div class="rp-head">
-          <p class="rp-task" id="rp-task"></p>
-          <div class="meta" id="rp-meta"></div>
-        </div>
-        <div class="rp-stage">
-          <div class="rp-video">
-            <video id="rp-video" muted playsinline preload="metadata" aria-label="Scene and wrist camera replay"></video>
-            <span class="cam l">Scene camera</span><span class="cam r">Wrist camera</span>
-          </div>
-          <div class="strip" id="rp-strip" aria-label="Subgoals"></div>
-          <div class="controls">
-            <button class="play" id="rp-play" type="button" aria-label="Play"></button>
-            <div class="seg" role="group" aria-label="Playback speed">
-              <button type="button" data-rate="0.5" aria-pressed="true">0.5×</button>
-              <button type="button" data-rate="1" aria-pressed="false">1×</button>
-              <button type="button" data-rate="2" aria-pressed="false">2×</button>
-            </div>
-            <span class="clock" id="rp-clock"></span>
-          </div>
-          <p class="gt" id="rp-gt"></p>
-        </div>
-        <div class="log-wrap">
-          <div class="log-head">
-            <p class="panel-title" style="margin:0">Reasoning log</p>
-            <div class="legend">
-              <span><i class="key dot" style="background:var(--r-planner)"></i>Planner</span>
-              <span><i class="key dot" style="background:var(--r-executor)"></i>Executor</span>
-              <span><i class="key dot" style="background:var(--r-monitor)"></i>Monitor</span>
-              <span><i class="key dot" style="background:var(--r-verifier)"></i>Verifier</span>
-              <span><i class="key dot" style="background:var(--r-memory)"></i>Memory</span>
-              <span><i class="key dot" style="background:var(--r-gate)"></i>Controller</span>
-            </div>
-          </div>
-          <ol class="log" id="rp-log"></ol>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===================================================== FAILURES -->
   <section class="content-section section-anchor research-import" id="failures">
     <div class="container">
@@ -421,7 +375,6 @@
       </div>
 
       <h3>Decision errors: grounding and premature “done”</h3>
-      <p>Grounding and completion errors account for 197 of the 209 decision errors. Grounding errors triple under semantic paraphrase (12 to 39 per 60 episodes) and stay high under object and position perturbations. Completion errors rise from 1 on unperturbed tasks to 27 under task perturbation.</p>
       <div class="panel">
         <p class="panel-title">VLM decision errors per 60 episodes</p>
         <p class="panel-sub">Raw counts by perturbation. Malformed replies are counted separately.</p>
