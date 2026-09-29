@@ -12,8 +12,8 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=entrance-1">
-  <script src="./static/js/motormind.js?v=entrance-1" defer></script>
+  <link rel="stylesheet" href="./static/css/motormind.css?v=timeline-2">
+  <script src="./static/js/motormind.js?v=timeline-2" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -35,10 +35,8 @@
   <section class="hero section-anchor" id="introduction">
     <div class="hero-atmosphere" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="hero-scan"></div><i class="signal signal-one"></i><i class="signal signal-two"></i><i class="signal signal-three"></i></div>
     <div class="container hero-inner">
-      <p class="hero-eyebrow"><span></span> GENERAL INTELLIGENCE. PHYSICAL ACTION.</p>
       <div class="wordmark"><img width="922" height="777" src="./static/images/motormind/icon.png" alt=""><span>MotorMind</span></div>
       <h1>Scaffolding General Vision Language Models<br class="desktop-break"> for Zero-Shot Robot Manipulation</h1>
-      <p class="hero-description">A general-purpose mind. A new way to move.</p>
       <div class="authors">
         <span><a href="https://bingxuanli.com/" target="_blank" rel="noopener noreferrer">Bingxuan Li</a><sup>*</sup></span>
         <span><a href="https://song-siqi.github.io/" target="_blank" rel="noopener noreferrer">Siqi Song</a><sup>*</sup></span>
@@ -59,7 +57,16 @@
           <span>Code</span>
         </a>
       </div>
-      <div class="hero-sequence" aria-label="Observe, reason, act"><span class="sequence-step"><i aria-hidden="true">01</i> Observe</span><span class="sequence-connector" aria-hidden="true"></span><span class="sequence-step"><i aria-hidden="true">02</i> Reason</span><span class="sequence-connector" aria-hidden="true"></span><span class="sequence-step"><i aria-hidden="true">03</i> Act</span></div>
+      <section class="harness-timeline" aria-label="Illustrative asynchronous execution timeline">
+        <div class="timeline-scroll" tabindex="0" role="region" aria-label="Execution, Monitor, and Memory timeline; scroll horizontally on small screens">
+          <div class="timeline-tracks">
+            <div class="timeline-lane execution-lane"><span class="lane-label">Execution</span><div class="lane-events"><span class="timeline-event" data-step="0">Plan</span><span class="timeline-event" data-step="1">Observe</span><span class="timeline-event" data-step="2">Propose</span><span class="timeline-event" data-step="3">Act</span><span class="timeline-event" data-step="4">Queued</span><span class="timeline-event" data-step="5">Verify</span><span class="timeline-event" data-step="6">Retry</span><span class="timeline-event" data-step="7">Propose</span><span class="timeline-event" data-step="8">Run batch</span></div></div>
+            <div class="timeline-lane monitor-lane"><span class="lane-label">Monitor <small>async</small></span><div class="lane-events"><span class="timeline-event" data-monitor="1" style="grid-column:2">Observe</span><span class="timeline-event" data-monitor="3" style="grid-column:4">Observe</span><span class="timeline-event stop-event" data-monitor="4" style="grid-column:5">STOP <span aria-hidden="true">↗</span></span><span class="timeline-event" data-monitor="6" style="grid-column:7">Observe</span><span class="timeline-event" data-monitor="8" style="grid-column:9">Look</span></div></div>
+            <div class="timeline-lane memory-lane"><span class="lane-label">Memory <small>async</small></span><div class="lane-events"><span class="memory-read" style="grid-column:1 / 7">Use latest finished note</span><span class="timeline-event memory-write" style="grid-column:7 / 10">Write outcome note <span class="writing-dots" aria-hidden="true">•••</span></span></div></div>
+            <div class="timeline-playhead" aria-hidden="true"><span></span></div>
+          </div>
+        </div>
+      </section>
       <div class="hero-metrics"><a href="#results"><strong>66.7<span>%</span></strong><span>Base success</span></a><a href="#results"><strong>53.8<span>%</span></strong><span>Under perturbations</span></a><a href="#real-world"><strong>95<span>%</span></strong><span>Real-world success</span></a></div>
       <div class="hero-bottom"><a class="explore-link" href="#abstract">Explore the research <span aria-hidden="true">↓</span></a><button class="replay-intro" id="replay-intro" type="button" hidden><span aria-hidden="true">↻</span> Replay intro</button></div>
     </div>

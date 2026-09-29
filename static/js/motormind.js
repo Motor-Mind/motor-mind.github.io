@@ -215,3 +215,43 @@ function finishIntro() {
 window.addEventListener('keydown', event => { if (['Tab','Escape'].includes(event.key)) finishIntro(); });
 window.addEventListener('wheel', finishIntro, {passive:true});
 window.addEventListener('touchstart', finishIntro, {passive:true});
+
+
+// Fast, automatic replay of the teaser's illustrative asynchronous sequence.
+const timeline = document.querySelector('.harness-timeline');
+let timelineStep = 0, timelineTimer, timelineVisible = false;
+function renderTimeline() {
+ const reduced = introMotion.matches;
+ timeline.style.setProperty('--timeline-position', String((timelineStep + .5) / 9));
+ timeline.querySelectorAll('[data-step]').forEach(event => {
+  const step = Number(event.dataset.step);
+  event.classList.toggle('is-active', !reduced && step === timelineStep && step !== 4);
+  event.classList.toggle('is-complete', reduced || step < timelineStep);
+  event.classList.toggle('is-cancelled', step === 4 && (reduced || timelineStep >= 4));
+ });
+ timeline.querySelectorAll('[data-monitor]').forEach(event => {
+  const step = Number(event.dataset.monitor);
+  event.classList.toggle('is-active', !reduced && (step === timelineStep || (step === 6 && timelineStep === 7)));
+  event.classList.toggle('is-complete', reduced || step < timelineStep);
+ });
+ timeline.querySelector('.memory-write').classList.toggle('is-active', reduced || timelineStep >= 6);
+ timeline.classList.toggle('is-playing', !reduced && timelineVisible && !document.hidden);
+}
+function scheduleTimeline() {
+ clearTimeout(timelineTimer);
+ renderTimeline();
+ if (introMotion.matches || !timelineVisible || document.hidden) return;
+ timelineTimer = setTimeout(() => {
+  timelineStep = (timelineStep + 1) % 9;
+  scheduleTimeline();
+ }, timelineStep === 4 ? 600 : timelineStep === 8 ? 700 : 400);
+}
+if ('IntersectionObserver' in window) {
+ new IntersectionObserver(entries => {
+  timelineVisible = entries[0].isIntersecting;
+  scheduleTimeline();
+ }, {threshold:.2}).observe(timeline);
+} else { timelineVisible = true; scheduleTimeline(); }
+document.addEventListener('visibilitychange', scheduleTimeline);
+introMotion.addEventListener('change', scheduleTimeline);
+renderTimeline();
