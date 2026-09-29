@@ -246,3 +246,29 @@
 @media(max-width:999px){.hero .hero-title-row .wordmark,.hero .hero-title-row h1{font-size:19px;line-height:1.35;letter-spacing:-.35px}.hero .hero-title-row .wordmark img{width:26px;height:26px}}
 
 @media(min-width:1000px){.hero-copy{max-width:1100px}.hero .hero-title-row h1{white-space:normal}.hero-title-row{gap:8px}}
+
+/* Match author and affiliation text sizes across screen widths. */
+.hero .authors{font-size:16px}
+@media(max-width:700px){.hero .authors{font-size:13px}}
+
+/* Stack the project name above the paper title. */
+.hero-title-row{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px}
+.hero .hero-title-row .wordmark{margin:0}
+.hero .hero-title-row h1{margin:0}
+.hero .hero-title-row .hero-name:after{content:none}
+
+.introduction-summary{max-width:960px;margin:0 auto 32px;padding:26px 30px;border-left:3px solid #6c94c8;background:#fff;color:#52657d;font-size:21px;line-height:1.8;letter-spacing:-.2px}
+.introduction-summary strong{font-weight:650;color:#243d5f}.introduction-summary em{font-weight:700;color:#256b82}
+@media(max-width:700px){.introduction-summary{font-size:17px;padding:20px;line-height:1.75}}
+
+/* The central idea and distinctions are visible before the teaser. */
+.hero-properties{flex:none;text-align:center;width:100%;margin:1px 0 3px}
+.hero-idea{font-size:clamp(21px,2.3vw,30px);font-weight:750;letter-spacing:-.7px;line-height:1.2;color:#1b304a}.hero-idea span{color:#227b83}
+.hero-idea-caption{font-size:12px;line-height:1.5;margin:5px 0 8px;color:#60738b}
+.property-tags{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.property-tags li{font-size:11px;font-weight:650;line-height:1.4;padding:5px 12px;border:1px solid #cddceb;border-radius:5px;color:#365677;background:#edf4fc}
+.property-tags li:first-child{background:#1c6570;color:white;border-color:#1c6570}
+@media(max-width:700px){.hero-idea{font-size:22px}.hero-idea-caption{font-size:11px;max-width:320px;margin:5px auto 8px}.property-tags{gap:5px}.property-tags li{font-size:10px;padding:4px 8px}}
+
+.introduction-summary{font-size:17px}
+@media(max-width:700px){.introduction-summary{font-size:15px}}

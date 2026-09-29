@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="MotorMind bridges VLM reasoning and robot control through mid-level actions, continual refinement, and asynchronous verification, enabling strong zero-shot manipulation without task-specific training.">
+  <meta name="description" content="MotorMind bridges VLM reasoning and robot control through mid-level actions, continual refinement, and asynchronous scheduling, enabling strong zero-shot manipulation without task-specific training.">
   <meta name="theme-color" content="#167ba6">
   <title>MotorMind: Scaffolding General Vision Language Models for Zero-Shot Robot Manipulation</title>
   <link rel="icon" href="./static/images/motormind/icon.png">
@@ -12,7 +12,7 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=unified-title-3">
+  <link rel="stylesheet" href="./static/css/motormind.css?v=summary-size-1">
   <script src="./static/js/motormind.js?v=hero-video-1" defer></script>
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
@@ -69,26 +69,24 @@
         </a>
       </div>
       </div>
+      <div class="hero-properties" aria-label="MotorMind key properties">
+        <p class="hero-idea">Enable VLM to operate robots <span>like humans do</span></p>
+        <p class="hero-idea-caption">Bridging <strong>VLM reasoning</strong> and <strong>robot control</strong> through mid-level actions, continual refinement, and asynchronous scheduling.</p>
+        <ul class="property-tags"><li>Zero-shot</li><li>No task-specific training</li><li>No VLA-as-Tool</li><li>No Coding Agent</li><li>No IK Solver</li><li>No SAM3</li></ul>
+      </div>
       <div class="hero-teaser">
         <video id="hero-teaser-video" controls autoplay muted loop playsinline preload="metadata" poster="./static/images/motormind/teaser-video-poster.jpg" width="1280" height="720" aria-label="MotorMind teaser video">
           <source src="./static/teaservideo.mp4" type="video/mp4">
           <a href="./static/teaservideo.mp4">Watch the MotorMind teaser</a>
         </video>
       </div>
-      <p class="hero-summary">MotorMind bridges <strong>VLM reasoning</strong> and <strong>robot control</strong> through mid-level actions, continual refinement, and asynchronous verification, enabling strong <em>zero-shot manipulation</em> in both <strong>simulation (Franka in LIBERO-PRO)</strong> and on a <strong>real robot (xArm6)</strong>, without task-specific training.</p>
       <div class="hero-bottom"><a class="explore-link" href="#abstract">Explore the research <span aria-hidden="true">↓</span></a><button class="replay-intro" id="replay-intro" type="button" hidden><span aria-hidden="true">↻</span> Replay intro</button></div>
     </div>
   </section>
 
-  <section class="summary-section section-anchor" id="abstract" aria-labelledby="introduction-heading">
+  <section class="summary-section section-anchor" id="abstract" aria-label="Introduction">
     <div class="container">
-      <h2 id="introduction-heading">Introduction</h2>
-      <div class="introduction-abstract" id="abstract-text">
-        <p>Vision-language-action (VLA) models have advanced robotic manipulation, but their zero-shot generalization remains limited, and their reliance on specialized robotics data keeps them from benefiting directly from rapidly advancing general-purpose vision-language models (VLMs). Agentic robotic systems instead use VLMs for high-level reasoning, yet typically depend on substantial external modules. This motivates our question: <strong>Can a general-purpose VLM itself serve as the decision-making core for robotic manipulation?</strong></p>
-        <p>Evaluating VLMs on action selection, progress assessment, and task completion reveals a capability-control gap: VLMs reason well about manipulation, but their decisions do not match the abstraction of continuous, embodiment-specific control.</p>
-        <p>We introduce MotorMind, a VLM-centric manipulation harness with an asynchronous inference loop. Without task-specific policy training, MotorMind achieves <strong>66.7% base success and 53.8% success under perturbations</strong> on LIBERO-PRO, compared with at most 13.3% and 19.2% for the prior zero-shot methods we evaluate, and the same interface reaches <strong>95% average success</strong> on a real xArm6 robot across direct manipulation and human-perturbation settings.</p>
-        <p>A stronger VLM backbone further raises base success without changing the harness, and the remaining errors, mainly in visual grounding, embodied reasoning, and action knowledge, decrease with stronger VLMs. These results reframe zero-shot manipulation as aligning general-purpose model capabilities with the control representation, rather than solely learning specialized action policies.</p>
-      </div>
+      <p class="introduction-summary">MotorMind bridges <strong>VLM reasoning</strong> and <strong>robot control</strong> through mid-level actions, continual refinement, and asynchronous scheduling, enabling strong <em>zero-shot manipulation</em> in both <strong>simulation (Franka in LIBERO-PRO)</strong> and on a <strong>real robot (xArm6)</strong>, without task-specific training.</p>
       <figure class="teaser"><a href="./static/images/motormind/teaser.png" target="_blank" rel="noopener" aria-label="Open MotorMind overview image"><img width="2200" height="1238" src="./static/images/motormind/teaser.png" alt="MotorMind connects visual observations, VLM reasoning, robot actions and feedback." fetchpriority="high"></a><figcaption>A frozen VLM proposes mid-level actions; the harness connects decisions to execution and measured feedback. Robot frames show an actual rollout; harness outputs and the interruption timeline are illustrative.</figcaption></figure>
     </div>
   </section>
