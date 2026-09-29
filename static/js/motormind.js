@@ -202,3 +202,19 @@ robotFilters.forEach(button => button.addEventListener('click', () => {
 robotCards.forEach(card => card.querySelector('video').addEventListener('play', event => {
  robotCards.forEach(other => { const video = other.querySelector('video'); if (video !== event.target) video.pause(); });
 }));
+
+const heroTeaser = document.getElementById('hero-teaser-video');
+if (heroTeaser && introMotion.matches) {
+ heroTeaser.autoplay = false;
+ heroTeaser.pause();
+}
+
+// Reserve the actual navigation height when sizing the landing viewport.
+const landingHeader = document.querySelector('header');
+function sizeLandingHeader() {
+ document.documentElement.style.setProperty('--landing-header-height', `${landingHeader.getBoundingClientRect().height}px`);
+}
+if (landingHeader) {
+ sizeLandingHeader();
+ new ResizeObserver(sizeLandingHeader).observe(landingHeader);
+}

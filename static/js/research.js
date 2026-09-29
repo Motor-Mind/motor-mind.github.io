@@ -322,7 +322,7 @@
   const taskList = h("div", { class: "tasklist" });
   let suite = "goal", curSlug = null;
   for (const fam of ["goal", "spatial", "object"]) {
-    const n = (TASKS[fam] || []).reduce((a, t) => a + (t ? t.slugs.length : 0), 0);
+    const n = (TASKS[fam] || []).reduce((a, t, row) => a + (t && !(fam === "goal" && row === 1) ? t.slugs.length : 0), 0);
     suiteSeg.append(h("button", { type: "button", "data-suite": fam, "aria-pressed": "false", onclick: () => { suite = fam; drawTasks(); } },
       [FAM[fam], h("span", { class: "muted", style: "font-weight:500", text: " " + n })]));
   }
@@ -330,23 +330,23 @@
     for (const b of suiteSeg.children) b.setAttribute("aria-pressed", String(b.dataset.suite === suite));
     taskList.replaceChildren();
     (TASKS[suite] || []).forEach((t, row) => {
-      if (!t) return;
+      if (!t || !t.slugs.length || (suite === "goal" && row === 1)) return;
       const chips = t.slugs.map((slug) => {
         const e = byId[D.replays[slug].id];
         return h("button", { type: "button", class: "chip sm", "data-slug": slug, "aria-pressed": String(slug === curSlug),
           title: e.lang + " · " + Math.round(e.t) + " s", onclick: () => loadReplay(slug, false) },
           [(e.pert === "Base" ? "Base" : e.pert) + " · s" + e.seed, h("span", { class: "n", text: Math.round(e.t) + " s" })]);
       });
-      taskList.append(h("div", { class: "trow" + (chips.length ? "" : " none") }, [
+      taskList.append(h("div", { class: "trow" }, [
         h("span", { class: "tid", text: FAM[suite][0] + (row + 1) }),
         h("span", { class: "tl", text: t.lang, title: t.lang }),
-        chips.length ? h("span", { class: "tchips" }, chips) : h("span", { class: "tnone", text: "no success in 10 runs" })]));
+        h("span", { class: "tchips" }, chips)]));
     });
   }
   const groupChips = (g) => h("div", { class: "opts" }, Object.keys(D.replays).filter((k) => D.replays[k].group === g).map((slug) =>
     h("button", { type: "button", class: "chip", "data-slug": slug, "aria-pressed": "false", text: D.replays[slug].label, onclick: () => loadReplay(slug, false) })));
   pickerBox.append(
-    h("div", { class: "grp-head" }, [h("span", { class: "grp-label" }, [key("var(--good)", "dot"), "Successful episodes, two per task"]), suiteSeg]),
+    h("div", { class: "grp-head" }, [h("span", { class: "grp-label" }, [key("var(--good)", "dot"), "Successful episodes"]), suiteSeg]),
     taskList,
     h("div", { class: "grp-row" }, [
       h("div", { class: "grp" }, [h("span", { class: "grp-label" }, [key("var(--c1)", "dot"), "Recovered after a failure"]), groupChips("recovered")]),

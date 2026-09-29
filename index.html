@@ -12,11 +12,11 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=introduction-1">
-  <script src="./static/js/motormind.js?v=introduction-1" defer></script>
+  <link rel="stylesheet" href="./static/css/motormind.css?v=hero-video-1">
+  <script src="./static/js/motormind.js?v=hero-video-1" defer></script>
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
-  <script src="./static/js/research.js?v=3" defer></script>
+  <script src="./static/js/research.js?v=replay-picker-2" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -67,6 +67,12 @@
           <span>Code</span>
         </a>
       </div>
+      </div>
+      <div class="hero-teaser">
+        <video id="hero-teaser-video" controls autoplay muted loop playsinline preload="metadata" poster="./static/images/motormind/teaser-video-poster.jpg" width="1280" height="720" aria-label="MotorMind teaser video">
+          <source src="./static/teaservideo.mp4" type="video/mp4">
+          <a href="./static/teaservideo.mp4">Watch the MotorMind teaser</a>
+        </video>
       </div>
       <p class="hero-summary">MotorMind bridges <strong>VLM reasoning</strong> and <strong>robot control</strong> through mid-level actions, continual refinement, and asynchronous verification, enabling strong <em>zero-shot manipulation</em> in both <strong>simulation (Franka in LIBERO-PRO)</strong> and on a <strong>real robot (xArm6)</strong>, without task-specific training.</p>
       <div class="hero-bottom"><a class="explore-link" href="#abstract">Explore the research <span aria-hidden="true">↓</span></a><button class="replay-intro" id="replay-intro" type="button" hidden><span aria-hidden="true">↻</span> Replay intro</button></div>
