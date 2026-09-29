@@ -137,9 +137,6 @@ function updateExplorer() {
 }
 [metric.select,methodGroup.select,sort.select].forEach(select => select.onchange = updateExplorer);
 document.querySelector('.main-result-charts').after(explorer.root); updateExplorer();
-const adaptive = chartShell('Adaptation by task','Success rates across four adaptive task groups.');
-const adaptiveData = [...document.querySelectorAll('.task-groups article')].map(article=>({name:article.querySelector('h3').textContent,value:parseFloat(article.querySelector('span').textContent),context:article.querySelector('span').textContent.split('·')[1].trim() + ' · ' + article.querySelector('p').textContent,ours:true}));
-renderBars(adaptive,adaptiveData,100,'%','Success rate'); document.querySelector('.adaptive-layout').after(adaptive.root);
 // Search long tables without changing their source data or group membership.
 document.querySelectorAll('.table-scroll').forEach((region,index) => {
  const rows = [...region.querySelectorAll('tbody tr:not(.result-group)')];
@@ -218,3 +215,58 @@ if (landingHeader) {
  sizeLandingHeader();
  new ResizeObserver(sizeLandingHeader).observe(landingHeader);
 }
+
+// Each task group opens its selected recorded example.
+const adaptiveExamples={
+ 'reasoning':{name:'Pick the second food item',instruction:'Select the second distinct food item over the entire episode, then pick it up downstream of the yellow line and place it in the basket.',change:'Count distinct food items across observations, then pick the second after it passes the yellow line and place it in the basket.',watch:'Remember the first food item, ignore non-food objects, and grasp the second downstream.',note:'',videoVersion:'second-food-1'},
+ 'scene-shift':{name:'Place pudding in a moving bowl',instruction:'Put the chocolate pudding in the bowl.',change:'The receiving bowl is displaced twice during transport.',watch:'Update the destination after each displacement and continue toward the same goal.',note:''},
+ 'dynamic':{name:'Pick a moving red mug',instruction:'Pick up the red mug from the conveyor belt and place it in the basket.',change:'The conveyor continues advancing during model inference.',watch:'Intercept the moving mug and carry it to the basket.',note:''},
+ 'prompt-shift':{name:'Redirect pudding from plate to tray',instruction:'Put the chocolate pudding on the plate.',change:'During transport, the instruction changes to: “Put the chocolate pudding in the wooden tray instead of on the plate.”',watch:'Redirect the held object toward the tray, release it, and retreat.',note:''}
+};
+const adaptiveCards=[...document.querySelectorAll('.adaptive-task-card')];
+let activeAdaptiveType=adaptiveCards[0].dataset.taskType;
+const adaptiveVideo=document.getElementById('adaptive-video');
+// Paper: arxiv/tbls/dynamic_results.tex. Order: ours, pi 0.5, GR00T, MolmoAct2, CaP-X.
+const adaptiveComparisonData={
+ 'reasoning':{tasks:10,rates:[70,0,0,20,30]},
+ 'scene-shift':{tasks:10,rates:[90,70,10,50,20]},
+ 'dynamic':{tasks:5,rates:[80,0,0,40,20]},
+ 'prompt-shift':{tasks:5,rates:[60,20,0,0,60]}
+};
+const adaptiveComparison=chartShell('Ours vs. Baselines','');
+document.getElementById('adaptive-baselines').append(adaptiveComparison.root);
+
+function showAdaptiveExample(key=activeAdaptiveType){
+ activeAdaptiveType=key;
+ const example=adaptiveExamples[key];
+ const selected=adaptiveCards.find(card=>card.dataset.taskType===key);
+ const taskTitle=selected.closest('article').querySelector('h3').textContent;
+ adaptiveCards.forEach(card=>{const active=card===selected;card.setAttribute('aria-pressed',String(active));card.closest('article').classList.toggle('is-selected',active);});
+ document.getElementById('adaptive-task-title').textContent=taskTitle;
+ document.getElementById('adaptive-instruction').textContent='Example: '+example.name+'. '+example.change;
+ const comparison=adaptiveComparisonData[key];
+ adaptiveComparison.root.querySelector('.chart-description').textContent='Success rate (%) · '+comparison.tasks+' tasks';
+ renderBars(adaptiveComparison,comparison.rates.map((value,i)=>({name:['MotorMind (Ours)','π₀.₅','GR00T N1.5','MolmoAct2','CaP-X'][i],value,ours:i===0,context:taskTitle+' · '+comparison.tasks+' tasks'})),100,'%','Success rate');
+ document.getElementById('adaptive-recording-note').textContent=example.note;
+ document.getElementById('adaptive-recording-note').hidden=!example.note;
+ adaptiveVideo.pause();adaptiveVideo.src='./static/videos/adaptive/'+key+'.mp4?v='+(example.videoVersion||'extended-2');adaptiveVideo.load();
+}
+adaptiveCards.forEach(card=>card.addEventListener('click',()=>{if(card.dataset.taskType!==activeAdaptiveType)showAdaptiveExample(card.dataset.taskType);}));
+showAdaptiveExample();
+
+// Align the first comparison row with the video, below the example description.
+let adaptiveAlignmentFrame;
+function alignAdaptiveComparison(){
+ cancelAnimationFrame(adaptiveAlignmentFrame);
+ adaptiveAlignmentFrame=requestAnimationFrame(()=>{
+  const bars=adaptiveComparison.bars;
+  const panel=document.getElementById('adaptive-baselines');
+  if(innerWidth<=700){panel.style.setProperty('--adaptive-bars-offset','0px');return;}
+  const current=parseFloat(getComputedStyle(bars).marginTop)||0;
+  const offset=Math.max(0,adaptiveVideo.getBoundingClientRect().top-bars.getBoundingClientRect().top+current);
+  panel.style.setProperty('--adaptive-bars-offset',offset+'px');
+ });
+}
+new ResizeObserver(alignAdaptiveComparison).observe(document.querySelector('.adaptive-demo-heading'));
+window.addEventListener('resize',alignAdaptiveComparison);
+alignAdaptiveComparison();

@@ -12,11 +12,11 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=summary-size-1">
-  <script src="./static/js/motormind.js?v=hero-video-1" defer></script>
+  <link rel="stylesheet" href="./static/css/motormind.css?v=landing-adaptive-3">
+  <script src="./static/js/motormind.js?v=landing-adaptive-3" defer></script>
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
-  <script src="./static/js/research.js?v=no-replays-1" defer></script>
+  <script src="./static/js/research.js?v=adaptive-merged-2" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -126,14 +126,16 @@
 
 
 </div>
-      <details class="action-breakdown" id="action-breakdown">
-        <summary id="diagnostic-results-heading">Detailed Results <span aria-hidden="true">⌄</span></summary>
+      <details class="abstract-details" id="action-breakdown">
+        <summary id="diagnostic-results-heading"><span>Action Selection: Detailed Results</span><span class="chevron" aria-hidden="true">⌄</span></summary>
+        <div class="abstract-body breakdown-body">
         <div class="table-scroll diagnostic-results-scroll" role="region" aria-labelledby="diagnostic-results-heading" tabindex="0">
           <table class="diagnostic-results">
             <caption>Action-selection accuracy by primitive type. Each cell reports accuracy (%) and correct answers / total questions.</caption>
             <thead><tr><th scope="col">Model</th><th scope="col">Translation (48)</th><th scope="col">Rotation (19)</th><th scope="col">Gripper (13)</th></tr></thead>
             <tbody><tr><th scope="row">Qwen3.8-Flash-Next-FP8</th><td>47.92% (23/48)</td><td>0.00% (0/19)</td><td>46.15% (6/13)</td></tr><tr><th scope="row">HY-Embodied-0.5 MoT-2B</th><td>20.83% (10/48)</td><td>15.79% (3/19)</td><td>23.08% (3/13)</td></tr><tr><th scope="row">Hy-Embodied-VLM-1.0 A3B</th><td>31.25% (15/48)</td><td>0.00% (0/19)</td><td>0.00% (0/13)</td></tr><tr><th scope="row">Cosmos3-Nano (understanding tower)</th><td>27.08% (13/48)</td><td>0.00% (0/19)</td><td>15.38% (2/13)</td></tr><tr><th scope="row">GLM-5.3-Flash</th><td>41.67% (20/48)</td><td>15.79% (3/19)</td><td>53.85% (7/13)</td></tr><tr><th scope="row">GPT-6 Astra (medium)</th><td>58.33% (28/48)</td><td>63.16% (12/19)</td><td>61.54% (8/13)</td></tr></tbody>
           </table>
+        </div>
         </div>
       </details>
       <p class="diagnostic-takeaway">These decisions motivate the MotorMind design: propose short action sequences, observe their effects, and reassess progress using robot feedback.</p>
@@ -174,7 +176,7 @@
       </div>
 
 </div></div>
-      <details class="action-breakdown full-results-details" id="full-results-details">
+      <details class="abstract-details full-results-details" id="full-results-details">
         <summary id="full-results-heading"><span>Full Results <span class="when-closed">· View complete table</span><span class="when-open">· Hide complete table</span></span><span class="fold-chevron" aria-hidden="true">⌄</span></summary>
       <div class="table-scroll full-results-scroll" role="region" aria-labelledby="full-results-heading" tabindex="0">
       <table class="full-results">
@@ -230,18 +232,25 @@
     <div class="container">
       <p class="section-kicker">When the world changes</p><h2>Adapting During Execution</h2>
       <p class="section-intro">Moving objects, shifted destinations, and revised instructions require decisions grounded in the latest observation.</p>
-      <div class="adaptive-layout"><figure class="paper-figure"><a href="./static/images/motormind/adaptive.png" target="_blank" rel="noopener" aria-label="Open adaptive manipulation example"><img width="2200" height="1093" src="./static/images/motormind/adaptive.png" alt="Conveyor manipulation example with objects moving as the robot reasons and acts." loading="lazy"></a></figure>
-        <div class="task-groups">
-          <article><div><h3>Dynamic Reasoning</h3><span>70% · 10 tasks</span></div><p>Identify moving targets through semantic, relational, or temporal descriptions.</p></article>
-          <article><div><h3>Scene Shift</h3><span>90% · 10 tasks</span></div><p>Continue toward the same goal after an object or destination moves.</p></article>
-          <article><div><h3>Dynamic Manipulation</h3><span>80% · 5 tasks</span></div><p>Track and manipulate targets moving on a conveyor.</p></article>
-          <article><div><h3>Prompt Shift</h3><span>60% · 5 tasks</span></div><p>Respond to an updated instruction without resetting the scene.</p></article>
+      <div class="adaptive-layout"><div class="task-groups">
+          <article><button type="button" class="adaptive-task-card" data-task-type="scene-shift" aria-label="Show Scene Shift" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Scene Shift</h3><span>90% · 10 tasks</span></div><p>Continue toward the same goal after an object or destination moves.</p></article>
+          <article><button type="button" class="adaptive-task-card" data-task-type="prompt-shift" aria-label="Show Prompt Shift" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Prompt Shift</h3><span>60% · 5 tasks</span></div><p>Respond to an updated instruction without resetting the scene.</p></article>
+          <article><button type="button" class="adaptive-task-card" data-task-type="dynamic" aria-label="Show Dynamic Manipulation" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Dynamic Manipulation</h3><span>80% · 5 tasks</span></div><p>Track and manipulate targets moving on a conveyor.</p></article>
+          <article><button type="button" class="adaptive-task-card" data-task-type="reasoning" aria-label="Show Dynamic Reasoning" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Dynamic Reasoning</h3><span>70% · 10 tasks</span></div><p>Identify moving targets through semantic, relational, or temporal descriptions.</p></article>
+        </div></div>
+      <div class="adaptive-viewer" id="adaptive-viewer">
+        <div class="adaptive-demo-content">
+          <div class="adaptive-demo-left">
+        <div class="adaptive-demo-heading"><h3 id="adaptive-task-title"></h3><p id="adaptive-instruction"></p></div>
+          <div class="adaptive-video-wrap"><video id="adaptive-video" controls playsinline preload="metadata" aria-label="Adaptive manipulation demo"></video><p class="adaptive-recording-note" id="adaptive-recording-note"></p></div>
+          </div>
+          <div class="adaptive-baselines" id="adaptive-baselines" aria-live="polite"></div>
         </div>
       </div>
 <div class="research-import">
-<h3>Compare adaptive task results</h3><div class="tbl-wrap"><table class="data wrap-cells" id="tbl-adaptive"><thead></thead><tbody></tbody></table></div>      <details class="more">
-        <summary>All 30 adaptive task instructions</summary>
-        <div class="body" id="adaptive-tasks"></div>
+      <details class="abstract-details" id="adaptive-task-details">
+        <summary><span>All 30 adaptive task instructions</span><span class="fold-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="abstract-body" id="adaptive-tasks"></div>
       </details>
 
 
