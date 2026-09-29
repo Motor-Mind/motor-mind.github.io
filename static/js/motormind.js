@@ -249,7 +249,7 @@ function showAdaptiveExample(key=activeAdaptiveType){
  renderBars(adaptiveComparison,comparison.rates.map((value,i)=>({name:['MotorMind (Ours)','π₀.₅','GR00T N1.5','MolmoAct2','CaP-X'][i],value,ours:i===0,context:taskTitle+' · '+comparison.tasks+' tasks'})),100,'%','Success rate');
  document.getElementById('adaptive-recording-note').textContent=example.note;
  document.getElementById('adaptive-recording-note').hidden=!example.note;
- adaptiveVideo.pause();adaptiveVideo.src='./static/videos/adaptive/'+key+'.mp4?v='+(example.videoVersion||'extended-2');adaptiveVideo.load();
+ adaptiveVideo.pause();adaptiveVideo.src='./static/videos/adaptive/'+key+'.mp4?v='+(example.videoVersion||'extended-2')+'-30x';adaptiveVideo.load();
 }
 adaptiveCards.forEach(card=>card.addEventListener('click',()=>{if(card.dataset.taskType!==activeAdaptiveType)showAdaptiveExample(card.dataset.taskType);}));
 showAdaptiveExample();
