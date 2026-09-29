@@ -121,7 +121,6 @@ const resultFigures = [...document.querySelectorAll('.main-result-charts figure'
  renderBars(chart,featured.map((r,i) => ({name:['CaP-X','MotorMind','OpenVLA / OFT','π₀.₅'][i],value:r.values[column],ours:r.ours,context:r.group === 1 ? 'Fine-tuned policy' : r.config === 'Zero-shot' ? 'Zero-shot method' : 'Zero-shot · ' + r.config})),100,'%',title);
  chart.root.append(element('p','chart-key','Teal: MotorMind · Gray: comparison methods. Select bars for training details.'));
  const source = resultFigures[index]; source.hidden = true; source.before(chart.root);
- const button = element('button','source-chart','View original chart ↗'); button.type = 'button'; button.onclick = () => { previousFocus = button; showFigure(figureLinks.indexOf(source.querySelector('a'))); viewer.showModal(); document.body.style.overflow = 'hidden'; }; chart.root.append(button);
 });
 const explorer = chartShell('Explore every method','Compare reported metrics across methods and configurations. Unreported values are omitted.');
 const metric = selectControl('Metric', [['6','Base · Average (%)'],['2','Base · Goal (%)'],['3','Base · Spatial (%)'],['4','Base · Object (%)'],['11','Perturbation · Average (%)'],['7','Perturbation · Semantic (%)'],['8','Perturbation · Object (%)'],['9','Perturbation · Position (%)'],['10','Perturbation · Task (%)'],['12','Base · Time (s) ↓'],['13','Base · Time score ↑'],['14','Perturbation · Time (s) ↓'],['15','Perturbation · Time score ↑']]);
@@ -138,10 +137,6 @@ function updateExplorer() {
 }
 [metric.select,methodGroup.select,sort.select].forEach(select => select.onchange = updateExplorer);
 document.querySelector('.main-result-charts').after(explorer.root); updateExplorer();
-const diagnostic = chartShell('Compare decision capabilities','240 visual questions · Select a capability or compare inference latency.');
-const capability = selectControl('Measure',[['4','Overall accuracy'],['1','Action selection'],['2','Progress assessment'],['3','Subgoal completion'],['5','Latency (ms) ↓']]); diagnostic.controls.append(capability.wrapper);
-function updateDiagnostic() { const col = +capability.select.value; const data = JSON.parse(document.getElementById('diagnostic-overview-data').textContent).map(row=>({name:row[0],value:row[col],context:col === 5 ? 'Mean inference time per query' : col === 4 ? '240 questions overall' : '80 questions per capability'})); renderBars(diagnostic,data,col===5 ? Math.max(...data.map(r=>r.value)) : 100,col===5 ? ' ms' : '%',capability.select.selectedOptions[0].textContent); }
-capability.select.onchange = updateDiagnostic; document.querySelector('.diagnostic-results-heading').after(diagnostic.root); updateDiagnostic();
 // Search long tables without changing their source data or group membership.
 document.querySelectorAll('.table-scroll').forEach((region,index) => {
  const rows = [...region.querySelectorAll('tbody tr:not(.result-group)')];
@@ -154,36 +149,7 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
  document.querySelectorAll('.paper-figure,.interactive-chart,.principles article,.real-stats').forEach(node=>observer.observe(node));
 }
 
-// Interactive companion to Figure 4, using the same table as the bar charts.
-const efficiency = chartShell('Explore the success–time trade-off','Higher is more successful; farther left is faster. Hover, focus, or select a point for its exact result.');
-const condition = selectControl('Evaluation',[['base','Base tasks'],['perturbation','Perturbations']]);
-const efficiencyGroup = selectControl('Policy group',[['2','Zero-shot methods'],['1','Fine-tuned policies / tools + MotorMind']]);
-const pointChoice = selectControl('Inspect method',[]);
-efficiency.controls.append(condition.wrapper,efficiencyGroup.wrapper,pointChoice.wrapper);
-const plot = element('div','scatter-plot'); plot.setAttribute('role','group'); plot.setAttribute('aria-label','Success rate versus episode wall time');
-efficiency.bars.replaceWith(plot);
-const xLabel=element('p','scatter-x','Mean episode wall time (seconds) →');
-plot.after(xLabel);
-function updateEfficiency() {
- const base = condition.select.value === 'base', successCol=base ? 5 : 10, timeCol=base ? 11 : 13;
- const rows=resultRows.filter(r=>r.group===+efficiencyGroup.select.value&&Number.isFinite(r.values[successCol])&&Number.isFinite(r.values[timeCol]));
- const maxTime=Math.ceil(Math.max(...rows.map(r=>r.values[timeCol]))/100)*100;
- plot.replaceChildren(); pointChoice.select.replaceChildren();
- for(let value=0;value<=100;value+=25){const line=element('div','scatter-grid');line.style.bottom=value+'%';line.append(element('span','',value+'%'));plot.append(line);}
- for(let i=0;i<=4;i++){const tick=element('span','scatter-tick',String(Math.round(maxTime*i/4)));tick.style.left=i*25+'%';plot.append(tick);}
- const ours=resultRows.find(r=>r.ours);const reference=element('div','scatter-reference');reference.style.bottom=ours.values[successCol]+'%';reference.append(element('span','','MotorMind '+ours.values[successCol]+'%'));plot.append(reference);
- rows.forEach((r,index)=>{
-  const name=r.name+' · '+r.config, detail=`${name} — ${r.values[successCol]}% success · ${r.values[timeCol]} s per episode · ${r.values[base?12:14]} pp/min`;
-  pointChoice.select.add(new Option(name,String(index)));
-  const point=element('button','scatter-point'+(r.ours?' ours':''));point.type='button';point.style.left=r.values[timeCol]/maxTime*100+'%';point.style.bottom=r.values[successCol]+'%';point.setAttribute('aria-label',detail);point.title=detail;
-  const selectPoint=()=>{plot.querySelectorAll('.scatter-point').forEach(p=>p.classList.remove('selected'));point.classList.add('selected');efficiency.detail.textContent=detail;pointChoice.select.value=String(index);};
-  point.onclick=selectPoint;point.onfocus=selectPoint;point.onmouseenter=selectPoint;plot.append(point);
- });
- pointChoice.select.onchange=()=>{const points=plot.querySelectorAll('.scatter-point');points[+pointChoice.select.value].click();};
- pointChoice.select.value=String(Math.max(0,rows.findIndex(r=>r.ours)));pointChoice.select.onchange();
-}
-condition.select.onchange=updateEfficiency;efficiencyGroup.select.onchange=updateEfficiency;
-document.querySelector('#efficiency-results .paper-figure').before(efficiency.root);updateEfficiency();
+
 
 // Replay the opening choreography without reloading data or changing scroll position.
 const introMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -216,44 +182,39 @@ window.addEventListener('wheel', finishIntro, {passive:true});
 window.addEventListener('touchstart', finishIntro, {passive:true});
 
 
-// Fast, automatic replay of the teaser's illustrative asynchronous sequence.
-const timeline = document.querySelector('.harness-timeline');
-let timelineStep = 0, timelineTimer, timelineVisible = false;
-function renderTimeline() {
- const reduced = introMotion.matches;
- timeline.style.setProperty('--timeline-position', String((timelineStep + .5) / 9));
- timeline.querySelectorAll('[data-step]').forEach(event => {
-  const step = Number(event.dataset.step);
-  event.classList.toggle('is-active', !reduced && step === timelineStep && step !== 4);
-  event.classList.toggle('is-complete', reduced || step < timelineStep);
-  event.classList.toggle('is-cancelled', step === 4 && (reduced || timelineStep >= 4));
+// Keep gallery playback explicit and pause clips when changing categories.
+const robotCards = [...document.querySelectorAll('.robot-video-card')];
+const robotFilters = [...document.querySelectorAll('[data-video-filter]')];
+robotFilters.forEach(button => button.addEventListener('click', () => {
+ const filter = button.dataset.videoFilter;
+ robotFilters.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+ let count = 0;
+ robotCards.forEach(card => {
+  const show = filter === 'all' || card.dataset.videoCategory === filter;
+  card.hidden = !show;
+  if (show) count++; else card.querySelector('video').pause();
  });
- timeline.querySelectorAll('[data-monitor]').forEach(event => {
-  const step = Number(event.dataset.monitor);
-  event.classList.toggle('is-active', !reduced && (step === timelineStep || (step === 6 && timelineStep === 7)));
-  event.classList.toggle('is-complete', reduced || step < timelineStep);
- });
- timeline.querySelector('.memory-write').classList.toggle('is-active', reduced || timelineStep >= 6);
- timeline.classList.toggle('is-playing', !reduced && timelineVisible && !document.hidden);
+ document.getElementById('robot-video-count').textContent = `${count} videos`;
+}));
+robotCards.forEach(card => card.querySelector('video').addEventListener('play', event => {
+ robotCards.forEach(other => { const video = other.querySelector('video'); if (video !== event.target) video.pause(); });
+}));
+
+const heroTeaser = document.getElementById('hero-teaser-video');
+if (heroTeaser && introMotion.matches) {
+ heroTeaser.autoplay = false;
+ heroTeaser.pause();
 }
-function scheduleTimeline() {
- clearTimeout(timelineTimer);
- renderTimeline();
- if (introMotion.matches || !timelineVisible || document.hidden) return;
- timelineTimer = setTimeout(() => {
-  timelineStep = (timelineStep + 1) % 9;
-  scheduleTimeline();
- }, timelineStep === 4 ? 600 : timelineStep === 8 ? 700 : 400);
+
+// Reserve the actual navigation height when sizing the landing viewport.
+const landingHeader = document.querySelector('header');
+function sizeLandingHeader() {
+ document.documentElement.style.setProperty('--landing-header-height', `${landingHeader.getBoundingClientRect().height}px`);
 }
-if ('IntersectionObserver' in window) {
- new IntersectionObserver(entries => {
-  timelineVisible = entries[0].isIntersecting;
-  scheduleTimeline();
- }, {threshold:.2}).observe(timeline);
-} else { timelineVisible = true; scheduleTimeline(); }
-document.addEventListener('visibilitychange', scheduleTimeline);
-introMotion.addEventListener('change', scheduleTimeline);
-renderTimeline();
+if (landingHeader) {
+ sizeLandingHeader();
+ new ResizeObserver(sizeLandingHeader).observe(landingHeader);
+}
 
 // Each task group opens its selected recorded example.
 const adaptiveExamples={
