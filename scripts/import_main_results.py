@@ -33,7 +33,7 @@ for chunk in source.split('\\\\'):
     else:method=last_method
     cells[0]=method
     def cell(value):
-        value=html.escape(value)
+        value=html.escape(value.replace('S1: ', 'Learnt on task · ').replace('S2: ', 'Learnt on base · '))
         value=re.sub(r'\\best\{([^}]+)\}',r'<strong>\1</strong>',value)
         value=re.sub(r'\\second\{([^}]+)\}',r'<u>\1</u>',value)
         return '—' if value=='-' else value

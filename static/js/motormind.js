@@ -103,7 +103,9 @@ function renderBars(chart, data, maximum, unit, metric) {
   const track = element('span','bar-track'), fill = element('span','bar-fill');
   fill.style.setProperty('--value', Math.max(0,Math.min(100,item.value/maximum*100)) + '%'); track.append(fill); track.setAttribute('aria-hidden','true');
   const value = item.value.toLocaleString('en-US',{maximumFractionDigits:2}) + unit;
-  row.append(element('span','bar-name',item.name),track,element('span','bar-value',value));
+  const label = element('span','bar-name',item.name);
+  if(item.setting)label.append(element('small','bar-setting',item.setting));
+  row.append(label,track,element('span','bar-value',value));
   row.setAttribute('aria-label', `${item.name}, ${metric}: ${value}. ${item.context || ''}`); row.setAttribute('aria-pressed','false');
   row.addEventListener('click', () => { chart.bars.querySelectorAll('button').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-pressed','false'); }); row.classList.add('selected'); row.setAttribute('aria-pressed','true'); chart.detail.textContent = `${item.name} · ${metric}: ${value}${item.context ? ' · ' + item.context : ''}`; }); chart.bars.append(row);
  });
@@ -125,12 +127,12 @@ const explorer = chartShell('Explore every method','Compare reported metrics acr
 const metric = selectControl('Metric', [['6','Base · Average (%)'],['2','Base · Goal (%)'],['3','Base · Spatial (%)'],['4','Base · Object (%)'],['11','Perturbation · Average (%)'],['7','Perturbation · Semantic (%)'],['8','Perturbation · Object (%)'],['9','Perturbation · Position (%)'],['10','Perturbation · Task (%)'],['12','Base · Time (s) ↓'],['13','Base · Time score ↑'],['14','Perturbation · Time (s) ↓'],['15','Perturbation · Time score ↑']]);
 // Table cell indices include method and configuration: averages are cells 5 and 10.
 const correctedColumns = {'6':5,'2':2,'3':3,'4':4,'11':10,'7':6,'8':7,'9':8,'10':9,'12':11,'13':12,'14':13,'15':14};
-const methodGroup = selectControl('Methods',[['2','Zero-shot methods'],['1','Fine-tuned policies / tools'],['all','All methods']]);
+const methodGroup = selectControl('Methods',[['2','Zero-shot methods'],['1','Fine-tuned policies / tools + MotorMind'],['all','All methods']]);
 const sort = selectControl('Order',[['reported','Reported order'],['descending','Highest first'],['ascending','Lowest first']]);
 explorer.controls.append(metric.wrapper,methodGroup.wrapper,sort.wrapper);
 function updateExplorer() {
  const column = correctedColumns[metric.select.value]; const percent = column <= 10;
- let data = resultRows.filter(r => (methodGroup.select.value === 'all' || r.group === +methodGroup.select.value) && Number.isFinite(r.values[column])).map(r => ({name:r.name,value:r.values[column],ours:r.ours,context:r.config + ' · ' + (r.group === 1 ? 'Fine-tuned policy / tool' : 'Zero-shot method')}));
+ let data = resultRows.filter(r => (methodGroup.select.value === 'all' || r.group === +methodGroup.select.value || r.ours) && Number.isFinite(r.values[column])).map(r => ({name:r.name,value:r.values[column],ours:r.ours,setting:r.ours ? 'Zero-shot · Ours' : /Harness VLA|CaP-X/.test(r.name) ? 'Setting: ' + r.config : '',context:r.config + ' · ' + (r.group === 1 ? 'Fine-tuned policy / tool' : 'Zero-shot method')}));
  if (sort.select.value !== 'reported') data.sort((a,b) => sort.select.value === 'descending' ? b.value-a.value : a.value-b.value);
  renderBars(explorer,data,percent ? 100 : Math.max(1,...data.map(r=>r.value)),percent ? '%' : [11,13].includes(column) ? 's' : '',metric.select.selectedOptions[0].textContent);
 }
@@ -138,7 +140,7 @@ function updateExplorer() {
 document.querySelector('.main-result-charts').after(explorer.root); updateExplorer();
 const diagnostic = chartShell('Compare decision capabilities','240 visual questions · Select a capability or compare inference latency.');
 const capability = selectControl('Measure',[['4','Overall accuracy'],['1','Action selection'],['2','Progress assessment'],['3','Subgoal completion'],['5','Latency (ms) ↓']]); diagnostic.controls.append(capability.wrapper);
-function updateDiagnostic() { const col = +capability.select.value; const data = [...document.querySelectorAll('.diagnostic-results tbody tr')].map(row=>({name:row.cells[0].textContent,value:+row.cells[col].textContent,context:col === 5 ? 'Mean inference time per query' : col === 4 ? '240 questions overall' : '80 questions per capability'})); renderBars(diagnostic,data,col===5 ? Math.max(...data.map(r=>r.value)) : 100,col===5 ? ' ms' : '%',capability.select.selectedOptions[0].textContent); }
+function updateDiagnostic() { const col = +capability.select.value; const data = JSON.parse(document.getElementById('diagnostic-overview-data').textContent).map(row=>({name:row[0],value:row[col],context:col === 5 ? 'Mean inference time per query' : col === 4 ? '240 questions overall' : '80 questions per capability'})); renderBars(diagnostic,data,col===5 ? Math.max(...data.map(r=>r.value)) : 100,col===5 ? ' ms' : '%',capability.select.selectedOptions[0].textContent); }
 capability.select.onchange = updateDiagnostic; document.querySelector('.diagnostic-results-heading').after(diagnostic.root); updateDiagnostic();
 const adaptive = chartShell('Adaptation by task','Success rates across four adaptive task groups.');
 const adaptiveData = [...document.querySelectorAll('.task-groups article')].map(article=>({name:article.querySelector('h3').textContent,value:parseFloat(article.querySelector('span').textContent),context:article.querySelector('span').textContent.split('·')[1].trim() + ' · ' + article.querySelector('p').textContent,ours:true}));
@@ -158,7 +160,7 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
 // Interactive companion to Figure 4, using the same table as the bar charts.
 const efficiency = chartShell('Explore the success–time trade-off','Higher is more successful; farther left is faster. Hover, focus, or select a point for its exact result.');
 const condition = selectControl('Evaluation',[['base','Base tasks'],['perturbation','Perturbations']]);
-const efficiencyGroup = selectControl('Policy group',[['2','Zero-shot methods'],['1','Fine-tuned policies / tools']]);
+const efficiencyGroup = selectControl('Policy group',[['2','Zero-shot methods'],['1','Fine-tuned policies / tools + MotorMind']]);
 const pointChoice = selectControl('Inspect method',[]);
 efficiency.controls.append(condition.wrapper,efficiencyGroup.wrapper,pointChoice.wrapper);
 const plot = element('div','scatter-plot'); plot.setAttribute('role','group'); plot.setAttribute('aria-label','Success rate versus episode wall time');

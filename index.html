@@ -96,15 +96,18 @@
       <div class="diagnostic-examples">
         <iframe id="bench-viewer" title="Decision Diagnostic interactive examples" src="./static/decision-bench/viewer.html"></iframe>
       </div>
-      <h3 class="diagnostic-results-heading" id="diagnostic-results-heading">Diagnostic Results</h3>
-      <div class="table-scroll diagnostic-results-scroll" role="region" aria-labelledby="diagnostic-results-heading" tabindex="0">
-        <table class="diagnostic-results">
-          <caption>Accuracy (%) across 80 questions per capability and 240 questions overall. Latency is mean inference time per query.</caption>
-          <thead><tr><th scope="col">Model</th><th scope="col">Action</th><th scope="col">Progress</th><th scope="col">Completion</th><th scope="col">Overall</th><th scope="col">Latency (ms) ↓</th></tr></thead>
-          <tbody><tr><th scope="row">Qwen3.8-Flash-Next-FP8</th><td>36.25</td><td><u>55.00</u></td><td><u>65.00</u></td><td><u>52.08</u></td><td><strong>276</strong></td></tr><tr><th scope="row">HY-Embodied-0.5 MoT-2B</th><td>20.00</td><td>50.00</td><td>47.50</td><td>39.17</td><td><u>402</u></td></tr><tr><th scope="row">Hy-Embodied-VLM-1.0 A3B</th><td>18.75</td><td>43.75</td><td>50.00</td><td>37.50</td><td>592</td></tr><tr><th scope="row">Cosmos3-Nano</th><td>18.75</td><td>50.00</td><td>62.50</td><td>43.75</td><td>3035</td></tr><tr><th scope="row">GLM-5.3-Flash</th><td><u>37.50</u></td><td>52.50</td><td>58.75</td><td>49.58</td><td>403</td></tr><tr><th scope="row">GPT-6 Astra</th><td><strong>60.00</strong></td><td><strong>76.25</strong></td><td><strong>82.50</strong></td><td><strong>72.92</strong></td><td>8724</td></tr></tbody>
-        </table>
-      </div>
-      <p class="diagnostic-results-note">Bold indicates the best result; underlining indicates the second best. Higher accuracy and lower latency are better.</p>
+      <h3 class="diagnostic-results-heading">Diagnostic Results</h3>
+      <script id="diagnostic-overview-data" type="application/json">[["Qwen3.8-Flash-Next-FP8", 36.25, 55.0, 65.0, 52.08, 276.0], ["HY-Embodied-0.5 MoT-2B", 20.0, 50.0, 47.5, 39.17, 402.0], ["Hy-Embodied-VLM-1.0 A3B", 18.75, 43.75, 50.0, 37.5, 592.0], ["Cosmos3-Nano", 18.75, 50.0, 62.5, 43.75, 3035.0], ["GLM-5.3-Flash", 37.5, 52.5, 58.75, 49.58, 403.0], ["GPT-6 Astra", 60.0, 76.25, 82.5, 72.92, 8724.0]]</script>
+      <details class="action-breakdown" id="action-breakdown">
+        <summary id="diagnostic-results-heading">Action Selection: Detailed Results <span aria-hidden="true">⌄</span></summary>
+        <div class="table-scroll diagnostic-results-scroll" role="region" aria-labelledby="diagnostic-results-heading" tabindex="0">
+          <table class="diagnostic-results">
+            <caption>Action-selection accuracy by primitive type. Each cell reports accuracy (%) and correct answers / total questions.</caption>
+            <thead><tr><th scope="col">Model</th><th scope="col">Translation (48)</th><th scope="col">Rotation (19)</th><th scope="col">Gripper (13)</th></tr></thead>
+            <tbody><tr><th scope="row">Qwen3.8-Flash-Next-FP8</th><td>47.92% (23/48)</td><td>0.00% (0/19)</td><td>46.15% (6/13)</td></tr><tr><th scope="row">HY-Embodied-0.5 MoT-2B</th><td>20.83% (10/48)</td><td>15.79% (3/19)</td><td>23.08% (3/13)</td></tr><tr><th scope="row">Hy-Embodied-VLM-1.0 A3B</th><td>31.25% (15/48)</td><td>0.00% (0/19)</td><td>0.00% (0/13)</td></tr><tr><th scope="row">Cosmos3-Nano (understanding tower)</th><td>27.08% (13/48)</td><td>0.00% (0/19)</td><td>15.38% (2/13)</td></tr><tr><th scope="row">GLM-5.3-Flash</th><td>41.67% (20/48)</td><td>15.79% (3/19)</td><td>53.85% (7/13)</td></tr><tr><th scope="row">GPT-6 Astra (medium)</th><td>58.33% (28/48)</td><td>63.16% (12/19)</td><td>61.54% (8/13)</td></tr></tbody>
+          </table>
+        </div>
+      </details>
       <p class="diagnostic-takeaway">These decisions motivate the MotorMind design: propose short action sequences, observe their effects, and reassess progress using robot feedback.</p>
     </div>
   </section>
@@ -133,7 +136,8 @@
       <div id="efficiency-results"><h3 class="full-results-heading">Success rate versus episode wall time</h3>
       <p class="section-intro">Figure 4 from the paper compares success and execution time across base and perturbed tasks, separating fine-tuned policies from zero-shot methods.</p>
       <figure class="paper-figure"><a href="./static/images/motormind/main-results-efficiency.png" aria-label="Open Figure 4: success rate versus episode wall time" target="_blank" rel="noopener"><img src="./static/images/motormind/main-results-efficiency.png" alt="Figure 4: four panels compare success rate and episode wall time for fine-tuned policies and zero-shot methods, in base and perturbation settings." loading="lazy"></a><figcaption>Figure 4. Orange points denote MotorMind; orange horizontal lines show its success rate in the fine-tuned panels. Gray dashed curves indicate the same time-normalized success score as MotorMind. Select the figure to zoom and inspect all four panels.</figcaption></figure></div>
-      <h3 class="full-results-heading" id="full-results-heading">Full Results</h3>
+      <details class="action-breakdown full-results-details" id="full-results-details">
+        <summary id="full-results-heading"><span>Full Results <span class="when-closed">· View complete table</span><span class="when-open">· Hide complete table</span></span><span class="fold-chevron" aria-hidden="true">⌄</span></summary>
       <div class="table-scroll full-results-scroll" role="region" aria-labelledby="full-results-heading" tabindex="0">
       <table class="full-results">
         <caption>LIBERO-PRO: success rates (%), episode wall time, and time-normalized success. Methods are grouped by whether the underlying policy uses task-specific fine-tuning.</caption>
@@ -145,10 +149,10 @@
 <tr><th scope="row">GR00T N1.5</th><td>Fine-tuned</td><td>0.0</td><td><u>95.0</u></td><td>0.0</td><td>31.7</td><td>30.0</td><td>30.0</td><td>1.7</td><td>16.7</td><td>19.6</td><td>15.6</td><td>121.8</td><td>16.2</td><td>72.4</td></tr>
 <tr><th scope="row">VoLoAgent (FT VLA as Tool)</th><td>Zero-shot agent</td><td>55.0</td><td>90.0</td><td><strong>100.0</strong></td><td>81.7</td><td>88.3</td><td>83.3</td><td>45.0</td><td>25.0</td><td>60.4</td><td>106.2</td><td>46.1</td><td>216.9</td><td>16.7</td></tr>
 <tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>Zero-shot</td><td>35.0</td><td>30.0</td><td>30.0</td><td>31.7</td><td>30.0</td><td>31.7</td><td>28.3</td><td>25.0</td><td>28.8</td><td>354.6</td><td>5.4</td><td>342.5</td><td>5.0</td></tr>
-<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S1: 5 loops</td><td>55.0</td><td>50.0</td><td>55.0</td><td>53.3</td><td>65.0</td><td>51.7</td><td><u>50.0</u></td><td><u>50.0</u></td><td>54.2</td><td>1040.4</td><td>3.1</td><td>1286.2</td><td>2.5</td></tr>
-<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S1: 10 loops</td><td>70.0</td><td>90.0</td><td><u>80.0</u></td><td>80.0</td><td>75.0</td><td>66.7</td><td><strong>53.3</strong></td><td><strong>66.7</strong></td><td><strong>65.4</strong></td><td>1764.0</td><td>2.7</td><td>2184.1</td><td>1.8</td></tr>
-<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S2: 5 loops</td><td>—</td><td>—</td><td>—</td><td>—</td><td>55.0</td><td>48.3</td><td>43.3</td><td>41.7</td><td>47.1</td><td>—</td><td>—</td><td>1125.2</td><td>2.5</td></tr>
-<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S2: 10 loops</td><td>—</td><td>—</td><td>—</td><td>—</td><td>70.0</td><td>58.3</td><td>41.7</td><td>45.0</td><td>53.8</td><td>—</td><td>—</td><td>1866.2</td><td>1.7</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>Learnt on task · 5 loops</td><td>55.0</td><td>50.0</td><td>55.0</td><td>53.3</td><td>65.0</td><td>51.7</td><td><u>50.0</u></td><td><u>50.0</u></td><td>54.2</td><td>1040.4</td><td>3.1</td><td>1286.2</td><td>2.5</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>Learnt on task · 10 loops</td><td>70.0</td><td>90.0</td><td><u>80.0</u></td><td>80.0</td><td>75.0</td><td>66.7</td><td><strong>53.3</strong></td><td><strong>66.7</strong></td><td><strong>65.4</strong></td><td>1764.0</td><td>2.7</td><td>2184.1</td><td>1.8</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>Learnt on base · 5 loops</td><td>—</td><td>—</td><td>—</td><td>—</td><td>55.0</td><td>48.3</td><td>43.3</td><td>41.7</td><td>47.1</td><td>—</td><td>—</td><td>1125.2</td><td>2.5</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>Learnt on base · 10 loops</td><td>—</td><td>—</td><td>—</td><td>—</td><td>70.0</td><td>58.3</td><td>41.7</td><td>45.0</td><td>53.8</td><td>—</td><td>—</td><td>1866.2</td><td>1.7</td></tr>
 <tr class="result-group"><th colspan="15" scope="colgroup">Zero-Shot Methods</th></tr>
 <tr><th scope="row">π₀.₅</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td><u>8.3</u></td><td>0.0</td><td><u>8.2</u></td><td>0.0</td></tr>
 <tr><th scope="row">MolmoAct2</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>9.4</td><td>0.0</td><td>9.3</td><td>0.0</td></tr>
@@ -161,6 +165,7 @@
 <tr class="result-ours"><th scope="row">MotorMind (Qwen3.8-Flash-Next)</th><td>Zero-shot</td><td><strong>45.0</strong></td><td><strong>75.0</strong></td><td><strong>80.0</strong></td><td><strong>66.7</strong></td><td><strong>58.3</strong></td><td><strong>46.7</strong></td><td><strong>51.7</strong></td><td><strong>58.3</strong></td><td><strong>53.8</strong></td><td>223.4</td><td><strong>17.91</strong></td><td>248.5</td><td><strong>12.99</strong></td></tr></tbody>
       </table></div>
       <p class="result-note">Time score = 60 × success rate (%) / episode wall time (s), in percentage points per minute. Bold and underlined values mark the best and second-best results within each group. A dash denotes an unreported result.</p>
+      </details>
     </div>
   </section>
 
