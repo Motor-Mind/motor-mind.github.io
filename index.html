@@ -27,7 +27,7 @@
     <a href="#method">Method</a>
     <a href="#results">Experiments</a>
     <a href="#adaptive">Adaptive Tasks</a>
-    <a href="#real-world">Real World</a>
+    <a href="#real-world">Real Robot Deployment</a>
   </div></nav>
   <div class="reading-progress" aria-hidden="true"></div>
 </header>
@@ -67,7 +67,7 @@
           </div>
         </div>
       </section>
-      <div class="hero-metrics"><a href="#results"><strong>66.7<span>%</span></strong><span>Base success</span></a><a href="#results"><strong>53.8<span>%</span></strong><span>Under perturbations</span></a><a href="#real-world"><strong>95<span>%</span></strong><span>Real-world success</span></a></div>
+      <div class="hero-metrics"><a href="#results"><strong>66.7<span>%</span></strong><span>Base success</span></a><a href="#results"><strong>53.8<span>%</span></strong><span>Under perturbations</span></a><a href="#real-world"><strong>95<span>%</span></strong><span>Real robot success</span></a></div>
       <div class="hero-bottom"><a class="explore-link" href="#abstract">Explore the research <span aria-hidden="true">↓</span></a><button class="replay-intro" id="replay-intro" type="button" hidden><span aria-hidden="true">↻</span> Replay intro</button></div>
     </div>
   </section>
@@ -181,7 +181,7 @@
 
   <section class="content-section section-anchor" id="real-world">
     <div class="container">
-      <p class="section-kicker">From simulation to the real world</p><h2>Real-World Deployment</h2>
+      <p class="section-kicker">From simulation to the real world</p><h2>Real Robot Deployment</h2>
       <p class="section-intro">The same VLM-facing interface operates an xArm6 with RealSense D455 observations, without task-specific demonstrations or policy fine-tuning.</p>
       <div class="real-stats"><div><strong>95<span>%</span></strong><p>Success across direct manipulation<br>and human perturbations · 114 / 120 trials</p></div><div><h3>Observe. Reassess. Recover.</h3><p>When an approach heads toward the wrong region, the Monitor flags the mismatch. The Executor uses a new observation to re-localize the target and continue.</p></div></div>
       <figure class="paper-figure"><a href="./static/images/motormind/case_study.png" target="_blank" rel="noopener" aria-label="Open real robot recovery case"><img width="2122" height="1216" src="./static/images/motormind/case_study.png" alt="xArm6 corrects its initial approach and places a blue cube into the box." loading="lazy"></a><figcaption>Execution and recovery on the real robot. The pooled 95% result covers direct manipulation and human perturbations; semantic-understanding trials are reported separately in the paper.</figcaption></figure>
