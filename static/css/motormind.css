@@ -203,3 +203,11 @@
 .hero-summary{flex:none;max-width:880px;margin:0;padding:10px 20px;font-size:14px;line-height:1.6}
 .hero .hero-bottom{flex:none;margin:0;line-height:1.4}.hero .replay-intro{padding:0}
 @media(max-width:700px){.hero{min-height:690px;padding:24px 0 20px}.hero .hero-inner{gap:10px}.hero .wordmark{font-size:38px;gap:9px}.hero .wordmark img{width:36px;height:36px}.hero h1{font-size:19px}.hero .authors{font-size:11px;gap:4px 12px}.hero-summary{font-size:12px;padding:9px 12px}.hero .affiliation{font-size:10px}}
+
+/* Keep starred and unstarred author names on a shared text baseline. */
+.hero .authors{align-items:baseline}
+.hero .authors>span{white-space:nowrap}
+.hero .authors sup{position:relative;top:-.45em;vertical-align:baseline;line-height:0;font-size:.75em}
+.hero .affiliation{font-size:16px;line-height:1.5}
+.hero .affiliation img{width:23px;height:23px}
+@media(max-width:700px){.hero .affiliation{font-size:13px}.hero .affiliation img{width:21px;height:21px}}
