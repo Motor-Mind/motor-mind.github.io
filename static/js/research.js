@@ -196,13 +196,6 @@
 
   /* ---------------------------------------------------------------- adaptive, real robot, backbone */
   (function adaptive() {
-    const cols = [["Dynamic Reasoning", 10], ["Scene Shift", 10], ["Dynamic Manipulation", 5], ["Prompt Shift", 5]];
-    const rows = [["π0.5", [0, 70, 0, 20]], ["GR00T N1.5", [0, 10, 0, 0]], ["MolmoAct2", [20, 50, 40, 0]], ["CaP-X", [30, 20, 20, 60]], ["MotorMind", [70, 90, 80, 60]]];
-    $("#tbl-adaptive thead").append(h("tr", {}, [h("th", { text: "Method" }), ...cols.map(([c, n]) => h("th", {}, [c, h("br"), h("span", { class: "muted", style: "font-weight:400", text: n + " tasks" })]))]));
-    const best = cols.map((_, i) => Math.max(...rows.map((r) => r[1][i])));
-    for (const [m, v] of rows) {
-      $("#tbl-adaptive tbody").append(h("tr", { class: m === "MotorMind" ? "ours" : "" }, [h("td", { text: m }), ...v.map((x, i) => h("td", { class: x === best[i] ? "best" : "", text: x + "%" }))]));
-    }
     const lists = [
       ["Scene Shift: the instruction stays fixed while the target or receiver is displaced", [
         ["put the ketchup in the wooden tray", "Receiver during transport; 1 displacement"], ["put the bowl on the plate", "Receiver during transport; 1 displacement"],
@@ -210,6 +203,12 @@
         ["put the bbq sauce in the wooden tray", "Target before grasping; 2 displacements"], ["put the milk in the basket", "Receiver during transport; 2 displacements"],
         ["put the chocolate pudding in the bowl", "Receiver during transport; 2 displacements"], ["put the salad dressing in the wooden tray", "Target before grasping; 3 displacements"],
         ["put the orange juice in the basket", "Target before grasping; 3 displacements"], ["put the butter in the bowl", "Receiver during transport; 3 displacements"]]],
+      ["Prompt Shift: the instruction changes after a physical trigger, without a reset", [
+        ["put the ketchup in the wooden tray", "Then: “Change of plan: put the ketchup on the plate instead of in the wooden tray.”"],
+        ["Put the chocolate pudding on the plate.", "Then: “Change of plan: put the chocolate pudding in the wooden tray instead of on the plate.”"],
+        ["Put the chocolate pudding on the plate.", "Then: “First put the chocolate pudding down on the table, turn on the stove and keep it on, and then continue putting the chocolate pudding on the plate.”"],
+        ["put the chocolate pudding on the plate", "Then: “Avoid the obstacle and continue putting the chocolate pudding on the plate.”"],
+        ["Put the BBQ sauce in the wooden tray.", "Then: “Change of plan: leave the BBQ sauce on the table and put only the chocolate pudding in the wooden tray.”"]]],
       ["Dynamic Manipulation: a named target on a single-pass conveyor at 1.5 mm/s", [
         ["pick up the red mug from the conveyor belt and place it in the basket"], ["pick up the alphabet soup from the conveyor belt and place it in the basket"],
         ["pick up the ketchup from the conveyor belt and place it in the red basket"], ["pick up the blue-and-white cream cheese box from the conveyor belt and place it in the wooden tray"],
@@ -225,12 +224,6 @@
         ["pick up the bottled product used to season food rather than to drink from the conveyor belt and place it in the basket", "Purpose: seasoning"],
         ["pick up the drink made from fruit from the conveyor belt and place it in the basket", "Contents: fruit drink"],
         ["pick up the food item that is between the two cups in the initial arrangement on the conveyor belt and place it in the basket", "Category and spatial relation"]]],
-      ["Prompt Shift: the instruction changes after a physical trigger, without a reset", [
-        ["put the ketchup in the wooden tray", "Then: “Change of plan: put the ketchup on the plate instead of in the wooden tray.”"],
-        ["Put the chocolate pudding on the plate.", "Then: “Change of plan: put the chocolate pudding in the wooden tray instead of on the plate.”"],
-        ["Put the chocolate pudding on the plate.", "Then: “First put the chocolate pudding down on the table, turn on the stove and keep it on, and then continue putting the chocolate pudding on the plate.”"],
-        ["put the chocolate pudding on the plate", "Then: “Avoid the obstacle and continue putting the chocolate pudding on the plate.”"],
-        ["Put the BBQ sauce in the wooden tray.", "Then: “Change of plan: leave the BBQ sauce on the table and put only the chocolate pudding in the wooden tray.”"]]],
     ];
     const box = $("#adaptive-tasks");
     for (const [title, items] of lists) {

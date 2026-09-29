@@ -12,11 +12,11 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=merged-adaptive-1">
-  <script src="./static/js/motormind.js?v=merged-adaptive-1" defer></script>
+  <link rel="stylesheet" href="./static/css/motormind.css?v=adaptive-clean-1">
+  <script src="./static/js/motormind.js?v=adaptive-clean-1" defer></script>
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
-  <script src="./static/js/research.js?v=replay-picker-2" defer></script>
+  <script src="./static/js/research.js?v=adaptive-order-1" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -234,24 +234,24 @@
       <p class="section-kicker">When the world changes</p><h2>Adapting During Execution</h2>
       <p class="section-intro">Moving objects, shifted destinations, and revised instructions require decisions grounded in the latest observation.</p>
       <div class="adaptive-layout"><div class="task-groups">
-          <article><button type="button" class="adaptive-task-card" data-task-type="reasoning" aria-label="Show Dynamic Reasoning" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Dynamic Reasoning</h3><span>70% · 10 tasks</span></div><p>Identify moving targets through semantic, relational, or temporal descriptions.</p></article>
           <article><button type="button" class="adaptive-task-card" data-task-type="scene-shift" aria-label="Show Scene Shift" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Scene Shift</h3><span>90% · 10 tasks</span></div><p>Continue toward the same goal after an object or destination moves.</p></article>
-          <article><button type="button" class="adaptive-task-card" data-task-type="dynamic" aria-label="Show Dynamic Manipulation" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Dynamic Manipulation</h3><span>80% · 5 tasks</span></div><p>Track and manipulate targets moving on a conveyor.</p></article>
           <article><button type="button" class="adaptive-task-card" data-task-type="prompt-shift" aria-label="Show Prompt Shift" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Prompt Shift</h3><span>60% · 5 tasks</span></div><p>Respond to an updated instruction without resetting the scene.</p></article>
+          <article><button type="button" class="adaptive-task-card" data-task-type="dynamic" aria-label="Show Dynamic Manipulation" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Dynamic Manipulation</h3><span>80% · 5 tasks</span></div><p>Track and manipulate targets moving on a conveyor.</p></article>
+          <article><button type="button" class="adaptive-task-card" data-task-type="reasoning" aria-label="Show Dynamic Reasoning" aria-pressed="false" aria-controls="adaptive-viewer"></button><div><h3>Dynamic Reasoning</h3><span>70% · 10 tasks</span></div><p>Identify moving targets through semantic, relational, or temporal descriptions.</p></article>
         </div></div>
       <div class="adaptive-viewer" id="adaptive-viewer">
         <div class="adaptive-demo-content">
           <div class="adaptive-demo-left">
         <div class="adaptive-demo-heading"><h3 id="adaptive-task-title"></h3><p id="adaptive-instruction"></p></div>
-          <div class="adaptive-video-wrap"><video id="adaptive-video" controls playsinline preload="metadata" aria-label="Adaptive manipulation demo"></video><span id="adaptive-ending-marker" hidden>Added demo ending</span><p class="adaptive-recording-note" id="adaptive-recording-note"></p></div>
+          <div class="adaptive-video-wrap"><video id="adaptive-video" controls playsinline preload="metadata" aria-label="Adaptive manipulation demo"></video><p class="adaptive-recording-note" id="adaptive-recording-note"></p></div>
           </div>
           <div class="adaptive-baselines" id="adaptive-baselines" aria-live="polite"></div>
         </div>
       </div>
 <div class="research-import">
-<h3>Compare adaptive task results</h3><div class="tbl-wrap"><table class="data wrap-cells" id="tbl-adaptive"><thead></thead><tbody></tbody></table></div>      <details class="more">
-        <summary>All 30 adaptive task instructions</summary>
-        <div class="body" id="adaptive-tasks"></div>
+      <details class="abstract-details" id="adaptive-task-details">
+        <summary><span>All 30 adaptive task instructions</span><span class="fold-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="abstract-body" id="adaptive-tasks"></div>
       </details>
 
 

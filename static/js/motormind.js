@@ -218,13 +218,13 @@ if (landingHeader) {
 
 // Each task group opens its selected recorded example.
 const adaptiveExamples={
- 'reasoning':{name:'Pick the cup that is not red',instruction:'Pick up the cup that is not red from the conveyor belt and place it in the basket.',change:'Objects move along the conveyor while the instruction identifies the target by exclusion.',watch:'Select the non-red cup, grasp it as it moves, and transport it to the basket.',note:'',tailStart:201.3},
- 'scene-shift':{name:'Place pudding in a moving bowl',instruction:'Put the chocolate pudding in the bowl.',change:'The receiving bowl is displaced twice during transport.',watch:'Update the destination after each displacement and continue toward the same goal.',note:'',tailStart:178.6},
- 'dynamic':{name:'Pick a moving red mug',instruction:'Pick up the red mug from the conveyor belt and place it in the basket.',change:'The conveyor continues advancing during model inference.',watch:'Intercept the moving mug and carry it to the basket.',note:'',tailStart:214.65},
- 'prompt-shift':{name:'Redirect pudding from plate to tray',instruction:'Put the chocolate pudding on the plate.',change:'During transport, the instruction changes to: “Put the chocolate pudding in the wooden tray instead of on the plate.”',watch:'Redirect the held object toward the tray, release it, and retreat.',note:'Reconstructed action replay · 20 fps, simulation time; model waiting omitted. Original scoring reported failure; the revised scoring rule was not rerun.'}
+ 'reasoning':{name:'Pick the second food item',instruction:'Select the second distinct food item over the entire episode, then pick it up downstream of the yellow line and place it in the basket.',change:'Count distinct food items across observations, then pick the second after it passes the yellow line and place it in the basket.',watch:'Remember the first food item, ignore non-food objects, and grasp the second downstream.',note:'',videoVersion:'second-food-1'},
+ 'scene-shift':{name:'Place pudding in a moving bowl',instruction:'Put the chocolate pudding in the bowl.',change:'The receiving bowl is displaced twice during transport.',watch:'Update the destination after each displacement and continue toward the same goal.',note:''},
+ 'dynamic':{name:'Pick a moving red mug',instruction:'Pick up the red mug from the conveyor belt and place it in the basket.',change:'The conveyor continues advancing during model inference.',watch:'Intercept the moving mug and carry it to the basket.',note:''},
+ 'prompt-shift':{name:'Redirect pudding from plate to tray',instruction:'Put the chocolate pudding on the plate.',change:'During transport, the instruction changes to: “Put the chocolate pudding in the wooden tray instead of on the plate.”',watch:'Redirect the held object toward the tray, release it, and retreat.',note:''}
 };
 const adaptiveCards=[...document.querySelectorAll('.adaptive-task-card')];
-let activeAdaptiveType='reasoning';
+let activeAdaptiveType=adaptiveCards[0].dataset.taskType;
 const adaptiveVideo=document.getElementById('adaptive-video');
 // Paper: arxiv/tbls/dynamic_results.tex. Order: ours, pi 0.5, GR00T, MolmoAct2, CaP-X.
 const adaptiveComparisonData={
@@ -249,13 +249,8 @@ function showAdaptiveExample(key=activeAdaptiveType){
  renderBars(adaptiveComparison,comparison.rates.map((value,i)=>({name:['MotorMind (Ours)','π₀.₅','GR00T N1.5','MolmoAct2','CaP-X'][i],value,ours:i===0,context:taskTitle+' · '+comparison.tasks+' tasks'})),100,'%','Success rate');
  document.getElementById('adaptive-recording-note').textContent=example.note;
  document.getElementById('adaptive-recording-note').hidden=!example.note;
- adaptiveVideo.pause();adaptiveVideo.src='./static/videos/adaptive/'+key+'.mp4?v=extended-2';adaptiveVideo.load();updateAdaptiveEnding();
+ adaptiveVideo.pause();adaptiveVideo.src='./static/videos/adaptive/'+key+'.mp4?v='+(example.videoVersion||'extended-2');adaptiveVideo.load();
 }
-function updateAdaptiveEnding(){
- const start=adaptiveExamples[activeAdaptiveType].tailStart;
- document.getElementById('adaptive-ending-marker').hidden=!(Number.isFinite(start)&&adaptiveVideo.currentTime>=start);
-}
-adaptiveVideo.addEventListener('timeupdate',updateAdaptiveEnding);
 adaptiveCards.forEach(card=>card.addEventListener('click',()=>{if(card.dataset.taskType!==activeAdaptiveType)showAdaptiveExample(card.dataset.taskType);}));
 showAdaptiveExample();
 
