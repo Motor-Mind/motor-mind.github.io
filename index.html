@@ -1,490 +1,179 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="description"
-        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
-  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nerfies: Deformable Neural Radiance Fields</title>
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-PYVRSFMDRL');
-  </script>
-
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
-
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/favicon.svg">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+  <meta name="description" content="MotorMind bridges VLM reasoning and robot control through mid-level actions, continual refinement, and asynchronous verification, enabling strong zero-shot manipulation without task-specific training.">
+  <meta name="theme-color" content="#167ba6">
+  <title>MotorMind: Scaffolding General Vision Language Models for Zero-Shot Robot Manipulation</title>
+  <link rel="icon" href="./static/images/motormind/icon.png">
+  <link rel="stylesheet" href="./static/css/motormind.css?v=diagnostic-results">
+  <script src="./static/js/motormind.js?v=results-2" defer></script>
 </head>
 <body>
-
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
+<a class="skip-link" href="#main">Skip to content</a>
+<button class="navigation-toggle" id="navigation-toggle" aria-controls="sidebar" aria-expanded="true">← Hide navigation</button>
+<header class="mobile-header">
+  <a class="mobile-brand" href="#introduction">MotorMind</a>
+  <button id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">Menu</button>
+</header>
+<nav class="sidebar" id="sidebar" aria-label="Page sections">
+  <a class="brand" href="#introduction"><img width="922" height="777" src="./static/images/motormind/icon.png" alt=""><span>MotorMind</span></a>
+  <p class="brand-note">VLM reasoning.<br>Robot control.</p>
+  <div class="nav-links">
+    <a href="#introduction" class="active" aria-current="location">Overview</a>
+    <a href="#abstract">TL;DR</a>
+    <a href="#diagnostic">Decision Diagnostic</a>
+    <a href="#method">Method</a>
+    <a href="#results">Main Experiments</a>
+    <a href="#adaptive">Adaptive Tasks</a>
+    <a href="#real-world">Real-World Deployment</a>
   </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://keunhong.com">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <a class="sidebar-source" href="https://github.com/Motor-Mind/motor-mind.github.io">Website source ↗</a>
 </nav>
-
-
-<section class="hero">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Nerfies: Deformable Neural Radiance Fields</h1>
-          <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="https://keunhong.com">Keunhong Park</a><sup>1</sup>,</span>
-            <span class="author-block">
-              <a href="https://utkarshsinha.com">Utkarsh Sinha</a><sup>2</sup>,</span>
-            <span class="author-block">
-              <a href="https://jonbarron.info">Jonathan T. Barron</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://sofienbouaziz.com">Sofien Bouaziz</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://www.danbgoldman.com">Dan B Goldman</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://homes.cs.washington.edu/~seitz/">Steven M. Seitz</a><sup>1,2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://www.ricardomartinbrualla.com">Ricardo Martin-Brualla</a><sup>2</sup>
-            </span>
-          </div>
-
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>University of Washington,</span>
-            <span class="author-block"><sup>2</sup>Google Research</span>
-          </div>
-
-          <div class="column has-text-centered">
-            <div class="publication-links">
-              <!-- PDF Link. -->
-              <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Video Link. -->
-              <span class="link-block">
-                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
-              </span>
-              <!-- Code Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
-                  </a>
-              </span>
-              <!-- Dataset Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="far fa-images"></i>
-                  </span>
-                  <span>Data</span>
-                  </a>
-            </div>
-
-          </div>
-        </div>
+<main id="main">
+  <section class="hero section-anchor" id="introduction">
+    <div class="container hero-inner">
+      <div class="wordmark"><img width="922" height="777" src="./static/images/motormind/icon.png" alt=""><span>MotorMind</span></div>
+      <h1>Scaffolding General Vision Language Models<br class="desktop-break"> for Zero-Shot Robot Manipulation</h1>
+      <div class="authors">
+        <span><a href="https://bingxuanli.com/" target="_blank" rel="noopener noreferrer">Bingxuan Li</a><sup>*</sup></span>
+        <span><a href="https://song-siqi.github.io/" target="_blank" rel="noopener noreferrer">Siqi Song</a><sup>*</sup></span>
+        <span><a href="https://wyzhgxy.github.io/" target="_blank" rel="noopener noreferrer">Yizhuo Wu</a><sup>*</sup></span>
+        <span><a href="https://maxwelljryao.github.io/" target="_blank" rel="noopener noreferrer">Jiarui Yao</a></span>
+        <span><a href="https://www.tongzhang-ml.org/" target="_blank" rel="noopener noreferrer">Tong Zhang</a></span>
+        <span><a href="https://www.huan-zhang.com/" target="_blank" rel="noopener noreferrer">Huan Zhang</a></span>
+      </div>
+      <p class="affiliation"><img width="1081" height="1081" src="./static/images/motormind/uiuc.png" alt="">University of Illinois Urbana-Champaign</p>
+      <p class="equal-contribution">* Equal contribution, interchangeable order.</p>
+      <div class="resource-links">
+        <a class="pill" href="https://github.com/BX126/-ICLR2027-VLM4Robo/tree/main/arxiv" aria-label="Paper: MotorMind manuscript source">
+          <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
+          <span>Paper</span>
+        </a>
+        <a class="pill" href="https://github.com/Motor-Mind" aria-label="Code: MotorMind GitHub organization">
+          <svg class="resource-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.931 0-1.31.468-2.381 1.236-3.221-.123-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.52 11.52 0 0 1 12 6.097c1.02.005 2.047.138 3.005.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.652.242 2.873.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.625-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.597 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          <span>Code</span>
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
-      </h2>
-    </div>
-  </div>
-</section>
-
-
-<section class="hero is-light is-small">
-  <div class="hero-body">
+  <section class="summary-section section-anchor" id="abstract" aria-labelledby="tldr-heading">
     <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
+      <h2 id="tldr-heading">TL;DR</h2>
+      <p class="tldr" id="tldr-text">MotorMind bridges VLM reasoning and robot control through mid-level actions, continual refinement, and asynchronous verification, enabling strong zero-shot manipulation without task-specific training.</p>
+      <details class="abstract-details" id="abstract-details">
+        <summary><span class="when-closed">View full abstract</span><span class="when-open">Hide full abstract</span><span class="chevron" aria-hidden="true">⌄</span></summary>
+        <div class="abstract-body"><h3>Abstract</h3><p id="abstract-text">Vision-language-action (VLA) models have advanced robotic manipulation, but their zero-shot generalization remains limited, and their reliance on specialized robotics data keeps them from benefiting directly from rapidly advancing general-purpose vision-language models (VLMs). Agentic robotic systems instead use VLMs for high-level reasoning, yet typically depend on substantial external modules. This motivates our question: Can a general-purpose VLM itself serve as the decision-making core for robotic manipulation? Evaluating VLMs on action selection, progress assessment, and task completion reveals a capability-control gap: VLMs reason well about manipulation, but their decisions do not match the abstraction of continuous, embodiment-specific control. We introduce MotorMind, a VLM-centric manipulation harness with an asynchronous inference loop. Without task-specific policy training, MotorMind achieves 66.7% base success and 53.8% success under perturbations on LIBERO-PRO, compared with at most 13.3% and 19.2% for the prior zero-shot methods we evaluate, and the same interface reaches 95% average success on a real xArm6 robot across direct manipulation and human-perturbation settings. A stronger VLM backbone further raises base success without changing the harness, and the remaining errors, mainly in visual grounding, embodied reasoning, and action knowledge, decrease with stronger VLMs. These results reframe zero-shot manipulation as aligning general-purpose model capabilities with the control representation, rather than solely learning specialized action policies.</p></div>
+      </details>
+      <figure class="teaser"><a href="./static/images/motormind/teaser.png" target="_blank" rel="noopener" aria-label="Open MotorMind overview image"><img width="2200" height="1238" src="./static/images/motormind/teaser.png" alt="MotorMind connects visual observations, VLM reasoning, robot actions and feedback." fetchpriority="high"></a><figcaption>A frozen VLM proposes mid-level actions; the harness connects decisions to execution and measured feedback. Robot frames show an actual rollout; harness outputs and the interruption timeline are illustrative.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="content-section section-anchor" id="diagnostic">
+    <div class="container">
+      <p class="section-kicker">Understanding VLM decisions</p><h2>Decision Diagnostic</h2>
+      <p class="section-intro">Can a general-purpose VLM make the decisions needed for manipulation? This diagnostic evaluation probes three capabilities with 240 visual questions, 80 per capability, drawn from robot observations.</p>
+      <div class="principles">
+        <article><span class="principle-number">01</span><h3>Action selection</h3><p>What should the robot do next to advance the stated subgoal?</p></article>
+        <article><span class="principle-number">02</span><h3>Progress assessment</h3><p>Did the observed transition make progress toward the subgoal?</p></article>
+        <article><span class="principle-number">03</span><h3>Subgoal completion</h3><p>Does the current state satisfy the subgoal and its success criterion?</p></article>
+      </div>
+      <div class="diagnostic-examples">
+        <iframe id="bench-viewer" title="Decision Diagnostic interactive examples" src="./static/decision-bench/viewer.html"></iframe>
+      </div>
+      <h3 class="diagnostic-results-heading" id="diagnostic-results-heading">Diagnostic Results</h3>
+      <div class="table-scroll diagnostic-results-scroll" role="region" aria-labelledby="diagnostic-results-heading" tabindex="0">
+        <table class="diagnostic-results">
+          <caption>Accuracy (%) across 80 questions per capability and 240 questions overall. Latency is mean inference time per query.</caption>
+          <thead><tr><th scope="col">Model</th><th scope="col">Action</th><th scope="col">Progress</th><th scope="col">Completion</th><th scope="col">Overall</th><th scope="col">Latency (ms) ↓</th></tr></thead>
+          <tbody><tr><th scope="row">Qwen3.8-Flash-Next-FP8</th><td>36.25</td><td><u>55.00</u></td><td><u>65.00</u></td><td><u>52.08</u></td><td><strong>276</strong></td></tr><tr><th scope="row">HY-Embodied-0.5 MoT-2B</th><td>20.00</td><td>50.00</td><td>47.50</td><td>39.17</td><td><u>402</u></td></tr><tr><th scope="row">Hy-Embodied-VLM-1.0 A3B</th><td>18.75</td><td>43.75</td><td>50.00</td><td>37.50</td><td>592</td></tr><tr><th scope="row">Cosmos3-Nano</th><td>18.75</td><td>50.00</td><td>62.50</td><td>43.75</td><td>3035</td></tr><tr><th scope="row">GLM-5.3-Flash</th><td><u>37.50</u></td><td>52.50</td><td>58.75</td><td>49.58</td><td>403</td></tr><tr><th scope="row">GPT-6 Astra</th><td><strong>60.00</strong></td><td><strong>76.25</strong></td><td><strong>82.50</strong></td><td><strong>72.92</strong></td><td>8724</td></tr></tbody>
+        </table>
+      </div>
+      <p class="diagnostic-results-note">Bold indicates the best result; underlining indicates the second best. Higher accuracy and lower latency are better.</p>
+      <p class="diagnostic-takeaway">These decisions motivate the MotorMind design: propose short action sequences, observe their effects, and reassess progress using robot feedback.</p>
+    </div>
+  </section>
+
+  <section class="content-section section-anchor" id="method">
+    <div class="container">
+      <p class="section-kicker">From reasoning to action</p><h2>How MotorMind Works</h2>
+      <p class="section-intro">One frozen VLM takes five complementary roles: Planner, Executor, Monitor, Verifier, and Memory. A deterministic Controller turns its proposals into physical motion.</p>
+      <figure class="paper-figure"><a href="./static/images/motormind/method.png" target="_blank" rel="noopener" aria-label="Open MotorMind method figure"><img width="2200" height="832" src="./static/images/motormind/method.png" alt="MotorMind architecture: planning, short action batches, control, background monitoring, verification, and memory." loading="lazy"></a></figure>
+      <div class="principles">
+        <article><span class="principle-number">01</span><h3>Mid-level actions</h3><p>The VLM proposes parameterized moves, rotations, and gripper actions. The controller validates and executes them.</p></article>
+        <article><span class="principle-number">02</span><h3>Continual refinement</h3><p>Fresh observations and measured feedback inform the next proposal. Outcomes determine whether to advance, retry, or replan.</p></article>
+        <article><span class="principle-number">03</span><h3>Concurrent feedback</h3><p>The Monitor checks ongoing execution and can cancel pending commands at an action boundary. Memory updates run in the background.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section muted-section section-anchor" id="results">
+    <div class="container">
+      <p class="section-kicker">Zero-shot manipulation</p><h2>Main Experiments</h2>
+      <p class="section-intro">On LIBERO-PRO, MotorMind achieves the highest success among the evaluated zero-shot methods. Success rate and episode wall time are reported together.</p>
+      <div class="main-result-charts">
+        <figure><a href="./static/images/motormind/base-results.png" target="_blank" rel="noopener"><img width="1832" height="620" src="./static/images/motormind/base-results.png" alt="Base task success: CaP-X 13.3%, MotorMind 66.7%, fine-tuned OpenVLA-OFT 98.3%, and fine-tuned pi 0.5 98.3%." loading="eager"></a></figure>
+        <figure><a href="./static/images/motormind/perturbation-results.png" target="_blank" rel="noopener"><img width="1792" height="620" src="./static/images/motormind/perturbation-results.png" alt="Perturbed task success: CaP-X 19.2%, MotorMind 53.8%, fine-tuned OpenVLA-OFT 51.2%, and fine-tuned pi 0.5 63.3%." loading="eager"></a></figure>
+      </div>
+      <h3 class="full-results-heading" id="full-results-heading">Full Results</h3>
+      <div class="table-scroll full-results-scroll" role="region" aria-labelledby="full-results-heading" tabindex="0">
+      <table class="full-results">
+        <caption>LIBERO-PRO: success rates (%), episode wall time, and time-normalized success. Methods are grouped by whether the underlying policy uses task-specific fine-tuning.</caption>
+        <thead><tr><th rowspan="2" scope="col">Method</th><th rowspan="2" scope="col">Configuration</th><th colspan="4" scope="colgroup">Base success rate (%)</th><th colspan="5" scope="colgroup">Perturbation success rate (%)</th><th colspan="2" scope="colgroup">Base efficiency</th><th colspan="2" scope="colgroup">Perturbation efficiency</th></tr><tr><th scope="col">Goal</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Avg.</th><th scope="col">Semantic</th><th scope="col">Object</th><th scope="col">Position</th><th scope="col">Task</th><th scope="col">Avg.</th><th scope="col">Time (s) ↓</th><th scope="col">Time score ↑</th><th scope="col">Time (s) ↓</th><th scope="col">Time score ↑</th></tr></thead>
+        <tbody><tr class="result-group"><th colspan="15" scope="colgroup">Fine-Tuned Policies / Agentic Methods with Fine-Tuned Policies</th></tr>
+<tr><th scope="row">π₀.₅</th><td>Fine-tuned</td><td><u>95.0</u></td><td><strong>100.0</strong></td><td><strong>100.0</strong></td><td><u>98.3</u></td><td><strong>98.3</strong></td><td><strong>95.0</strong></td><td>36.7</td><td>23.3</td><td><u>63.3</u></td><td><u>5.9</u></td><td><u>997.1</u></td><td><u>6.8</u></td><td><strong>562.1</strong></td></tr>
+<tr><th scope="row">MolmoAct2</th><td>Fine-tuned</td><td><strong>100.0</strong></td><td><strong>100.0</strong></td><td><strong>100.0</strong></td><td><strong>100.0</strong></td><td>95.0</td><td><u>90.0</u></td><td>36.7</td><td>30.0</td><td>62.9</td><td>6.6</td><td>914.6</td><td>7.7</td><td><u>492.2</u></td></tr>
+<tr><th scope="row">OpenVLA / OFT</th><td>Fine-tuned</td><td><u>95.0</u></td><td><strong>100.0</strong></td><td><strong>100.0</strong></td><td><u>98.3</u></td><td><u>96.7</u></td><td>86.7</td><td>11.7</td><td>10.0</td><td>51.2</td><td><strong>5.7</strong></td><td><strong>1033.5</strong></td><td><strong>6.7</strong></td><td>459.9</td></tr>
+<tr><th scope="row">GR00T N1.5</th><td>Fine-tuned</td><td>0.0</td><td><u>95.0</u></td><td>0.0</td><td>31.7</td><td>30.0</td><td>30.0</td><td>1.7</td><td>16.7</td><td>19.6</td><td>15.6</td><td>121.8</td><td>16.2</td><td>72.4</td></tr>
+<tr><th scope="row">VoLoAgent (FT VLA as Tool)</th><td>Zero-shot agent</td><td>55.0</td><td>90.0</td><td><strong>100.0</strong></td><td>81.7</td><td>88.3</td><td>83.3</td><td>45.0</td><td>25.0</td><td>60.4</td><td>106.2</td><td>46.1</td><td>216.9</td><td>16.7</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>Zero-shot</td><td>35.0</td><td>30.0</td><td>30.0</td><td>31.7</td><td>30.0</td><td>31.7</td><td>28.3</td><td>25.0</td><td>28.8</td><td>354.6</td><td>5.4</td><td>342.5</td><td>5.0</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S1: 5 loops</td><td>55.0</td><td>50.0</td><td>55.0</td><td>53.3</td><td>65.0</td><td>51.7</td><td><u>50.0</u></td><td><u>50.0</u></td><td>54.2</td><td>1040.4</td><td>3.1</td><td>1286.2</td><td>2.5</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S1: 10 loops</td><td>70.0</td><td>90.0</td><td><u>80.0</u></td><td>80.0</td><td>75.0</td><td>66.7</td><td><strong>53.3</strong></td><td><strong>66.7</strong></td><td><strong>65.4</strong></td><td>1764.0</td><td>2.7</td><td>2184.1</td><td>1.8</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S2: 5 loops</td><td>—</td><td>—</td><td>—</td><td>—</td><td>55.0</td><td>48.3</td><td>43.3</td><td>41.7</td><td>47.1</td><td>—</td><td>—</td><td>1125.2</td><td>2.5</td></tr>
+<tr><th scope="row">Harness VLA (FT VLA as Tool)</th><td>S2: 10 loops</td><td>—</td><td>—</td><td>—</td><td>—</td><td>70.0</td><td>58.3</td><td>41.7</td><td>45.0</td><td>53.8</td><td>—</td><td>—</td><td>1866.2</td><td>1.7</td></tr>
+<tr class="result-group"><th colspan="15" scope="colgroup">Zero-Shot Methods</th></tr>
+<tr><th scope="row">π₀.₅</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td><u>8.3</u></td><td>0.0</td><td><u>8.2</u></td><td>0.0</td></tr>
+<tr><th scope="row">MolmoAct2</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>9.4</td><td>0.0</td><td>9.3</td><td>0.0</td></tr>
+<tr><th scope="row">OpenVLA / OFT</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>3.3</td><td>0.8</td><td>34.7</td><td>0.0</td><td>34.4</td><td>1.5</td></tr>
+<tr><th scope="row">GR00T N1.5</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td><strong>6.3</strong></td><td>0.0</td><td><strong>6.2</strong></td><td>0.0</td></tr>
+<tr><th scope="row">CaP-X (GPT5.6-Terra + Claude Opus 5)</th><td>Zero-shot</td><td>5.0</td><td>0.0</td><td>5.0</td><td>3.3</td><td>15.0</td><td>3.3</td><td>1.7</td><td>3.3</td><td>5.8</td><td>68.5</td><td><u>2.9</u></td><td>72.4</td><td><u>4.8</u></td></tr>
+<tr><th scope="row">CaP-X (GPT5.6-Terra + Claude Opus 5)</th><td>5 loops</td><td><u>25.0</u></td><td>0.0</td><td><u>15.0</u></td><td><u>13.3</u></td><td>25.0</td><td><u>16.7</u></td><td><u>16.7</u></td><td>15.0</td><td>18.3</td><td>290.1</td><td>2.8</td><td>270.2</td><td>4.1</td></tr>
+<tr><th scope="row">CaP-X (GPT5.6-Terra + Claude Opus 5)</th><td>10 loops</td><td><u>25.0</u></td><td>0.0</td><td><u>15.0</u></td><td><u>13.3</u></td><td><u>26.7</u></td><td><u>16.7</u></td><td><u>16.7</u></td><td><u>16.7</u></td><td><u>19.2</u></td><td>346.4</td><td>2.3</td><td>320.4</td><td>3.6</td></tr>
+<tr><th scope="row">VoLoAgent (zero-shot VLA as Tool)</th><td>Zero-shot</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>500.0</td><td>0.0</td><td>500.0</td><td>0.0</td></tr>
+<tr class="result-ours"><th scope="row">MotorMind (Qwen3.8-Flash-Next)</th><td>Zero-shot</td><td><strong>45.0</strong></td><td><strong>75.0</strong></td><td><strong>80.0</strong></td><td><strong>66.7</strong></td><td><strong>58.3</strong></td><td><strong>46.7</strong></td><td><strong>51.7</strong></td><td><strong>58.3</strong></td><td><strong>53.8</strong></td><td>223.4</td><td><strong>17.91</strong></td><td>248.5</td><td><strong>12.99</strong></td></tr></tbody>
+      </table></div>
+      <p class="result-note">Time score = 60 × success rate (%) / episode wall time (s), in percentage points per minute. Bold and underlined values mark the best and second-best results within each group. A dash denotes an unreported result.</p>
+    </div>
+  </section>
+
+  <section class="content-section muted-section section-anchor" id="adaptive">
+    <div class="container">
+      <p class="section-kicker">When the world changes</p><h2>Adapting During Execution</h2>
+      <p class="section-intro">Moving objects, shifted destinations, and revised instructions require decisions grounded in the latest observation.</p>
+      <div class="adaptive-layout"><figure class="paper-figure"><a href="./static/images/motormind/adaptive.png" target="_blank" rel="noopener" aria-label="Open adaptive manipulation example"><img width="2200" height="1093" src="./static/images/motormind/adaptive.png" alt="Conveyor manipulation example with objects moving as the robot reasons and acts." loading="lazy"></a></figure>
+        <div class="task-groups">
+          <article><div><h3>Dynamic Reasoning</h3><span>70% · 10 tasks</span></div><p>Identify moving targets through semantic, relational, or temporal descriptions.</p></article>
+          <article><div><h3>Scene Shift</h3><span>90% · 10 tasks</span></div><p>Continue toward the same goal after an object or destination moves.</p></article>
+          <article><div><h3>Dynamic Manipulation</h3><span>80% · 5 tasks</span></div><p>Track and manipulate targets moving on a conveyor.</p></article>
+          <article><div><h3>Prompt Shift</h3><span>60% · 5 tasks</span></div><p>Respond to an updated instruction without resetting the scene.</p></article>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
-          </p>
-          <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
-          </p>
-          <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
-          </p>
-        </div>
-      </div>
+  <section class="content-section section-anchor" id="real-world">
+    <div class="container">
+      <p class="section-kicker">From simulation to the real world</p><h2>Real-World Deployment</h2>
+      <p class="section-intro">The same VLM-facing interface operates an xArm6 with RealSense D455 observations, without task-specific demonstrations or policy fine-tuning.</p>
+      <div class="real-stats"><div><strong>95<span>%</span></strong><p>Success across direct manipulation<br>and human perturbations · 114 / 120 trials</p></div><div><h3>Observe. Reassess. Recover.</h3><p>When an approach heads toward the wrong region, the Monitor flags the mismatch. The Executor uses a new observation to re-localize the target and continue.</p></div></div>
+      <figure class="paper-figure"><a href="./static/images/motormind/case_study.png" target="_blank" rel="noopener" aria-label="Open real robot recovery case"><img width="2122" height="1216" src="./static/images/motormind/case_study.png" alt="xArm6 corrects its initial approach and places a blue cube into the box." loading="lazy"></a><figcaption>Execution and recovery on the real robot. The pooled 95% result covers direct manipulation and human perturbations; semantic-understanding trials are reported separately in the paper.</figcaption></figure>
     </div>
-    <!--/ Abstract. -->
-
-    <!-- Paper video. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-    <!--/ Paper video. -->
-  </div>
-</section>
+  </section>
 
 
-<section class="section">
-  <div class="container is-max-desktop">
-
-    <div class="columns is-centered">
-
-      <!-- Visual Effects. -->
-      <div class="column">
-        <div class="content">
-          <h2 class="title is-3">Visual Effects</h2>
-          <p>
-            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
-            would be impossible without nerfies since it would require going through a wall.
-          </p>
-          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/dollyzoom-stacked.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-      <!--/ Visual Effects. -->
-
-      <!-- Matting. -->
-      <div class="column">
-        <h2 class="title is-3">Matting</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <video id="matting-video" controls playsinline height="100%">
-              <source src="./static/videos/matting.mp4"
-                      type="video/mp4">
-            </video>
-          </div>
-
-        </div>
-      </div>
-    </div>
-    <!--/ Matting. -->
-
-    <!-- Animation. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
-
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
-        <div class="content has-text-justified">
-          <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
-          </p>
-        </div>
-        <div class="columns is-vcentered interpolation-panel">
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_start.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <p>Start Frame</p>
-          </div>
-          <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper">
-              Loading...
-            </div>
-            <input class="slider is-fullwidth is-large is-info"
-                   id="interpolation-slider"
-                   step="1" min="0" max="100" value="0" type="range">
-          </div>
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_end.jpg"
-                 class="interpolation-image"
-                 alt="Interpolation end reference image."/>
-            <p class="is-bold">End Frame</p>
-          </div>
-        </div>
-        <br/>
-        <!--/ Interpolating. -->
-
-        <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
-        <div class="content has-text-justified">
-          <p>
-            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
-            viewpoint such as a stabilized camera by playing back the training deformations.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <video id="replay-video"
-                 controls
-                 muted
-                 preload
-                 playsinline
-                 width="75%">
-            <source src="./static/videos/replay.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <!--/ Re-rendering. -->
-
-      </div>
-    </div>
-    <!--/ Animation. -->
-
-
-    <!-- Concurrent Work. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Related Links</h2>
-
-        <div class="content has-text-justified">
-          <p>
-            There's a lot of excellent work that was introduced around the same time as ours.
-          </p>
-          <p>
-            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
-          </p>
-          <p>
-            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
-            both use deformation fields to model non-rigid scenes.
-          </p>
-          <p>
-            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
-          </p>
-          <p>
-            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--/ Concurrent Work. -->
-
-  </div>
-</section>
-
-
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{park2021nerfies,
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
-}</code></pre>
-  </div>
-</section>
-
-
-<footer class="footer">
-  <div class="container">
-    <div class="content has-text-centered">
-      <a class="icon-link"
-         href="./static/videos/nerfies_paper.pdf">
-        <i class="fas fa-file-pdf"></i>
-      </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div>
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-          <p>
-            This means you are free to borrow the <a
-              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
-            we just ask that you link back to this page in the footer.
-            Please remember to remove the analytics code included in the header of the website which
-            you do not want on your website.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-
+  <footer><p>MotorMind · University of Illinois Urbana-Champaign</p><p>Based on the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies website template</a>, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p></footer>
+</main>
 </body>
 </html>
