@@ -270,3 +270,20 @@ function alignAdaptiveComparison(){
 new ResizeObserver(alignAdaptiveComparison).observe(document.querySelector('.adaptive-demo-heading'));
 window.addEventListener('resize',alignAdaptiveComparison);
 alignAdaptiveComparison();
+
+// Copy the citation, with a selectable fallback if clipboard access is unavailable.
+const copyCitation = document.getElementById('copy-citation');
+copyCitation.addEventListener('click', async () => {
+ const citation = document.getElementById('citation-bibtex');
+ const status = document.getElementById('citation-status');
+ try {
+  await navigator.clipboard.writeText(citation.textContent);
+  status.textContent = 'BibTeX copied.';
+ } catch {
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(citation);
+  selection.removeAllRanges();selection.addRange(range);
+  status.textContent = 'Citation selected. Press Ctrl+C or ⌘C to copy.';
+ }
+});

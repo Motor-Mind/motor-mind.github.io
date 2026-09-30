@@ -12,8 +12,8 @@
       document.documentElement.classList.add('entrance-ready');
     }
   </script>
-  <link rel="stylesheet" href="./static/css/motormind.css?v=highlight-nos-1">
-  <script src="./static/js/motormind.js?v=adaptive-30x-1" defer></script>
+  <link rel="stylesheet" href="./static/css/motormind.css?v=citation-1">
+  <script src="./static/js/motormind.js?v=citation-1" defer></script>
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
   <script src="./static/js/research.js?v=adaptive-merged-2" defer></script>
@@ -59,7 +59,7 @@
       </div>
       <p class="affiliation"><img width="1081" height="1081" src="./static/images/motormind/uiuc.png" alt="">University of Illinois Urbana-Champaign</p>
       <div class="resource-links">
-        <a class="pill" href="./static/papers/motormind.pdf?v=6fd79a0" target="_blank" rel="noopener noreferrer" type="application/pdf" aria-label="Paper: read the MotorMind manuscript PDF">
+        <a class="pill" href="https://arxiv.org/pdf/2609.38078" target="_blank" rel="noopener noreferrer" type="application/pdf" aria-label="Paper: read the MotorMind manuscript PDF">
           <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
           <span>Paper</span>
         </a>
@@ -420,6 +420,21 @@
   </section>
 
 
+  <section class="content-section citation-section section-anchor" id="citation" aria-labelledby="citation-heading">
+    <div class="container">
+      <div class="citation-heading"><h2 id="citation-heading">Citation</h2><button id="copy-citation" type="button">Copy BibTeX</button></div>
+      <pre class="citation-code"><code id="citation-bibtex">@article{li2026motormind,
+  title = {MotorMind: Scaffolding General Vision Language Models for Zero-Shot Robot Manipulation},
+  author = {Li, Bingxuan and Song, Siqi and Wu, Yizhuo and Yao, Jiarui and Zhang, Tong and Zhang, Huan},
+  journal = {arXiv preprint arXiv:2609.38078},
+  year = {2026},
+  eprint = {2609.38078},
+  archivePrefix = {arXiv},
+  url = {https://arxiv.org/abs/2609.38078}
+}</code></pre>
+      <p id="citation-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
 </main>
 <dialog id="figure-viewer" aria-labelledby="figure-title">
   <div class="viewer-toolbar"><h2 id="figure-title">Figure explorer</h2><div class="viewer-actions"><button id="figure-prev" aria-label="Previous figure">←</button><button id="figure-next" aria-label="Next figure">→</button><button id="zoom-out" aria-label="Zoom out">−</button><output id="zoom-level" aria-live="polite">100%</output><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-reset">Fit</button><a id="figure-original" target="_blank" rel="noopener">Original ↗</a><button id="figure-close" aria-label="Close figure viewer">✕</button></div></div>
