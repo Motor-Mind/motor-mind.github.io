@@ -22,7 +22,7 @@
 .hero{height:auto;min-height:calc(100svh - var(--landing-header-height,78px))}.hero .hero-inner{height:auto;min-height:calc(100svh - var(--landing-header-height,78px) - 60px)}
 .latency-demo{margin:14px 0 16px;padding:13px 15px;border:1px solid #cfdfe7;border-radius:10px;background:#ffffffb8;text-align:left;max-width:420px}
 .latency-demo-heading,.latency-label{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.latency-demo-heading{font-size:11px;font-weight:700;color:#167d83;margin-bottom:11px}.latency-demo-heading a{font-size:10px;font-weight:500}
+.latency-demo-heading{font-size:11px;font-weight:700;color:#167d83;margin-bottom:11px}.latency-demo-heading a{font-size:10px;font-weight:500;flex-shrink:0}.latency-demo-heading>span{line-height:1.5}
 .latency-row+.latency-row{margin-top:10px}.latency-label{font-size:11px;color:#40566e;margin-bottom:5px}.latency-label strong{font-variant-numeric:tabular-nums;color:#17283f}
 .latency-track{height:6px;background:#e9eef5;border-radius:5px;overflow:hidden}.latency-fill{height:100%;width:100%;display:block;transform-origin:left;border-radius:5px}
 .latency-fast{background:#008c83;animation:latency-fast 12s linear infinite}.latency-slow{background:#7692ba;animation:latency-slow 12s linear infinite}
@@ -89,12 +89,11 @@
       <div class="hero-showcase">
       <div class="hero-properties" aria-label="MotorMind key properties">
         <p class="hero-idea">Equipping a VLM to operate robots <span>like a human teleoperator</span></p>
-        <p class="hero-idea-caption">Powered by <strong>Qwen3.8-Flash-Next</strong>, MotorMind reasons from observations and issues actions like a human teleoperator. Concurrent monitoring keeps checking the scene while the robot moves.</p>
         <div class="latency-demo" aria-label="Diagnostic query latency: Qwen3.8-Flash-Next 276 milliseconds; GPT-6 Astra 8.724 seconds.">
-          <div class="latency-demo-heading"><span>Fast, compact VLM</span><a href="#diagnostic">Query latency ↗</a></div>
+          <div class="latency-demo-heading"><span>Reducing control latency with a fast MoE VLM: Qwen3.8-Flash-Next</span><a href="#diagnostic">Query latency ↗</a></div>
           <div class="latency-row"><div class="latency-label"><span>Qwen3.8-Flash-Next</span><strong>276 ms</strong></div><div class="latency-track" aria-hidden="true"><span class="latency-fill latency-fast"></span></div></div>
           <div class="latency-row"><div class="latency-label"><span>GPT-6 Astra</span><strong>8.724 s</strong></div><div class="latency-track" aria-hidden="true"><span class="latency-fill latency-slow"></span></div></div>
-          <p class="latency-note">One query, same start. Animation repeats every 12 s.<br>Mean times from our decision diagnostic; not full control-loop latency.</p>
+          <p class="latency-note">One query, same start. Animation repeats every 12 s.</p>
           <button class="latency-toggle" type="button" aria-pressed="false">Pause animation</button>
         </div>
         <ul class="property-tags"><li><strong class="property-no">No</strong> task-specific training</li><li><strong class="property-no">No</strong> VLA-as-Tool</li><li><strong class="property-no">No</strong> Action Experts</li><li><strong class="property-no">No</strong> Coding Agent</li><li><strong class="property-no">No</strong> Motion Planning Tool or IK Module</li><li><strong class="property-no">No</strong> SAM3</li><li><strong class="property-no">No</strong> Skills/API</li></ul>
