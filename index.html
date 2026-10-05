@@ -17,6 +17,23 @@
   <link rel="stylesheet" href="./static/css/research.css?v=1">
   <script src="./static/research/data.js" defer></script>
   <script src="./static/js/research.js?v=adaptive-merged-2" defer></script>
+
+<style id="hero-latency-style">
+.hero{height:auto;min-height:calc(100svh - var(--landing-header-height,78px))}.hero .hero-inner{height:auto;min-height:calc(100svh - var(--landing-header-height,78px) - 60px)}
+.latency-demo{margin:14px 0 16px;padding:13px 15px;border:1px solid #cfdfe7;border-radius:10px;background:#ffffffb8;text-align:left;max-width:420px}
+.latency-demo-heading,.latency-label{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.latency-demo-heading{font-size:11px;font-weight:700;color:#167d83;margin-bottom:11px}.latency-demo-heading a{font-size:10px;font-weight:500}
+.latency-row+.latency-row{margin-top:10px}.latency-label{font-size:11px;color:#40566e;margin-bottom:5px}.latency-label strong{font-variant-numeric:tabular-nums;color:#17283f}
+.latency-track{height:6px;background:#e9eef5;border-radius:5px;overflow:hidden}.latency-fill{height:100%;width:100%;display:block;transform-origin:left;border-radius:5px}
+.latency-fast{background:#008c83;animation:latency-fast 12s linear infinite}.latency-slow{background:#7692ba;animation:latency-slow 12s linear infinite}
+@keyframes latency-fast{0%{transform:scaleX(0)}2.3%,100%{transform:scaleX(1)}}
+@keyframes latency-slow{0%{transform:scaleX(0)}72.7%,100%{transform:scaleX(1)}}
+.latency-note{font-size:10px!important;line-height:1.5!important;color:#65768b!important;margin:10px 0 0!important}
+.latency-toggle{display:block;padding:0;margin-top:7px;border:0;background:none;font:inherit;font-size:10px;color:#4262d8;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.latency-demo.is-paused .latency-fill{animation-play-state:paused}
+@media(max-width:800px){.latency-demo{margin:14px auto 16px;width:100%;box-sizing:border-box}}
+@media(prefers-reduced-motion:reduce){.latency-fill{animation:none;transform:scaleX(1)}.latency-toggle{display:none}}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -71,9 +88,15 @@
       </div>
       <div class="hero-showcase">
       <div class="hero-properties" aria-label="MotorMind key properties">
-        <p class="hero-idea">Fast, compact VLM.<span>Adaptive robot control.</span></p>
+        <p class="hero-idea">Equipping a VLM to operate robots <span>like a human teleoperator</span></p>
         <p class="hero-idea-caption">Powered by <strong>Qwen3.8-Flash-Next</strong>, MotorMind reasons from observations and issues actions like a human teleoperator. Concurrent monitoring keeps checking the scene while the robot moves.</p>
-        <p class="hero-independence"><a href="#diagnostic"><strong>276 ms per query</strong> in our decision diagnostic</a>, compared with 8.724 s for GPT-6 Astra. These are model-query times, not full control-loop latency.</p>
+        <div class="latency-demo" aria-label="Diagnostic query latency: Qwen3.8-Flash-Next 276 milliseconds; GPT-6 Astra 8.724 seconds.">
+          <div class="latency-demo-heading"><span>Fast, compact VLM</span><a href="#diagnostic">Query latency ↗</a></div>
+          <div class="latency-row"><div class="latency-label"><span>Qwen3.8-Flash-Next</span><strong>276 ms</strong></div><div class="latency-track" aria-hidden="true"><span class="latency-fill latency-fast"></span></div></div>
+          <div class="latency-row"><div class="latency-label"><span>GPT-6 Astra</span><strong>8.724 s</strong></div><div class="latency-track" aria-hidden="true"><span class="latency-fill latency-slow"></span></div></div>
+          <p class="latency-note">One query, same start. Animation repeats every 12 s.<br>Mean times from our decision diagnostic; not full control-loop latency.</p>
+          <button class="latency-toggle" type="button" aria-pressed="false">Pause animation</button>
+        </div>
         <ul class="property-tags"><li><strong class="property-no">No</strong> task-specific training</li><li><strong class="property-no">No</strong> VLA-as-Tool</li><li><strong class="property-no">No</strong> Action Experts</li><li><strong class="property-no">No</strong> Coding Agent</li><li><strong class="property-no">No</strong> Motion Planning Tool or IK Module</li><li><strong class="property-no">No</strong> SAM3</li><li><strong class="property-no">No</strong> Skills/API</li></ul>
       </div>
       <div class="hero-teaser">
@@ -449,5 +472,8 @@
 
 
 </div>
+<script id="hero-latency-controls">
+(()=>{const demo=document.querySelector('.latency-demo');const button=demo.querySelector('.latency-toggle');button.addEventListener('click',()=>{const paused=demo.classList.toggle('is-paused');button.setAttribute('aria-pressed',String(paused));button.textContent=paused?'Resume animation':'Pause animation';});})();
+</script>
 </body>
 </html>
